@@ -12,7 +12,7 @@ export class Extractor extends ApiAiExtractor implements unifierInterfaces.Reque
 
   constructor(
     @inject("meta:component//google") googleComponent: Component,
-    @optional() @inject("meta:component//platform:apiai") componentMeta?: Component
+    @optional() @inject("meta:component//apiai") componentMeta?: Component
   ) {
     if (typeof componentMeta === "undefined") throw new Error("Could not find api.ai component. You cannot use the google assistant platform without 'assistant-apiai'!");
     super(componentMeta);

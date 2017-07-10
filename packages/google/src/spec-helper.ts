@@ -1,8 +1,8 @@
 import { Component } from "ioc-container";
 import { SpecSetup, unifierInterfaces, rootInterfaces } from "assistant-source";
 
-import { Extraction, HandlerInterface } from "../src/components/google/interfaces";
-import { GoogleHandle } from "../src/components/google/handle";
+import { Extraction, HandlerInterface } from "./components/google/interfaces";
+import { GoogleHandle } from "./components/google/handle";
 
 export class SpecHelper implements unifierInterfaces.PlatformSpecHelper {
   specSetup: SpecSetup
