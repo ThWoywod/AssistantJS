@@ -1,7 +1,7 @@
 import { unifierInterfaces, rootInterfaces } from "assistant-source";
 import { Extractor as ApiAiExtractor } from "assistant-apiai"
 import { injectable, inject, optional } from "inversify";
-import { Component } from "ioc-container";
+import { Component } from "inversify-components";
 
 import { Extraction } from "./interfaces";
 import { log } from "../../global";
