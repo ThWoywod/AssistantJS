@@ -1,0 +1,17 @@
+{
+  "helpGenericIntent": [
+    "Help",
+    "Could you {please|} help{ me|}?",
+    "Help me{, please|}"
+  ],
+  "yesGenericIntent": [
+    "{yes|yeah|of course}"
+  ],
+  "noGenericIntent": [
+    "{no|nope}",
+    "not{| at all}"
+  ],
+  "cancelGenericIntent": [
+    "{cancel|abort|stop}"
+  ]
+}

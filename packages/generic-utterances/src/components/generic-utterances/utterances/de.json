@@ -1,0 +1,16 @@
+{
+  "helpGenericIntent": [
+    "{Hilfe|Hilf}",
+    "Kannst du {mir|mir bitte|bitte} helfen?",
+    "Hilf mir {bitte|}"
+  ],
+  "yesGenericIntent": [
+    "{aber|}{ja|natürlich|selbstverständlich|klar|jap|jupp|jo|jau|klar|natürlich}"
+  ],
+  "noGenericIntent": [
+    "natürlich {nein|nicht}"
+  ],
+  "cancelGenericIntent": [
+    "{abrrechen|Abbruch|Stop|Halt}"
+  ]
+}
