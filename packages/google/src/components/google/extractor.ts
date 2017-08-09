@@ -20,6 +20,13 @@ export class Extractor extends ApiAiExtractor implements unifierInterfaces.Reque
     this.googleComponent = googleComponent;
   }
 
+  async fits(context: rootInterfaces.RequestContext) {
+    let apiAiFits = await super.fits(context);
+    if (!apiAiFits) return false;
+
+    return typeof context.body.originalRequest !== "undefined" && context.body.originalRequest.data !== "undefined" && context.body.originalRequest.data.device !== "undefined"
+  }
+
   async extract(context: rootInterfaces.RequestContext): Promise<Extraction> {
     log("Extracting request on google platform...");
     let apiAiExtraction = await super.extract(context);
@@ -30,7 +37,10 @@ export class Extractor extends ApiAiExtractor implements unifierInterfaces.Reque
     });
   }
 
-  protected getOAuthToken(context: rootInterfaces.RequestContext): string {
-    return context.body.originalRequest.data.user.access_token;
+  protected getOAuthToken(context: rootInterfaces.RequestContext): string | undefined {
+    if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
+      return context.body.originalRequest.data.user.access_token;
+    else
+      return undefined;
   }
 }
