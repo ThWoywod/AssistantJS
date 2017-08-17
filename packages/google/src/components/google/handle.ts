@@ -7,16 +7,15 @@ import { log } from "../../global";
 @injectable()
 export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
   responseCallback: rootInterfaces.ResponseCallback;
-  endSessionExecuter: Function;
 
   isSSML: boolean = false;
   forceAuthenticated: boolean = false;
   
   constructor(
     @inject("core:root:current-request-context") extraction: rootInterfaces.RequestContext,
-    @inject("core:unifier:end-session-callbacks-executer") endSessionExecuter: Function
+    @inject("core:unifier:current-kill-session-promise") killSession: Function
   ) {
-    super(extraction, endSessionExecuter);
+    super(extraction, killSession);
   }
 
   sendResponse() {
