@@ -9,7 +9,11 @@ export class MainState implements stateMachineInterfaces.State {
     this.responseFactory = factory;
   }
 
-  unhandledIntent() {
+  unhandledGenericIntent() {
     this.responseFactory.createSimpleVoiceResponse().endSessionWith("Hello from google!");
+  }
+
+  unansweredGenericIntent() {
+    this.responseFactory.createAndSendEmptyResponse();
   }
 }

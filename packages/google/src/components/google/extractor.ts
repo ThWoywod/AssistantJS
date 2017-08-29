@@ -37,10 +37,10 @@ export class Extractor extends ApiAiExtractor implements unifierInterfaces.Reque
     });
   }
 
-  protected getOAuthToken(context: rootInterfaces.RequestContext): string | undefined {
+  protected getOAuthToken(context: rootInterfaces.RequestContext): string | null {
     if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
       return context.body.originalRequest.data.user.access_token;
     else
-      return undefined;
+      return null;
   }
 }
