@@ -12,6 +12,9 @@
     "not{| at all}"
   ],
   "cancelGenericIntent": [
-    "{cancel|abort|stop}"
+    "{cancel|abort}"
+  ],
+  "stopGenericIntent": [
+    "stop"
   ]
 }

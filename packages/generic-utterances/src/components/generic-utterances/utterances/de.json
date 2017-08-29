@@ -11,6 +11,9 @@
     "natürlich {nein|nicht}"
   ],
   "cancelGenericIntent": [
-    "{abrrechen|Abbruch|Stop|Halt}"
+    "{abbrechen|Abbruch}"
+  ],
+  "stopGenericIntent": [
+    "{Stopp|Halt}"
   ]
 }
