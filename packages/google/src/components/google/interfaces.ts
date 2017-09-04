@@ -3,6 +3,7 @@ import { Extraction as ApiAiExtraction, HandlerInterface as ApiAiHandler } from 
 
 export interface Extraction extends 
   ApiAiExtraction,
+  unifierInterfaces.OptionalExtractions.TemporalAuthExtraction,
   unifierInterfaces.OptionalExtractions.OAuthExtraction {}
 
 export interface HandlerInterface extends

@@ -18,7 +18,8 @@ export class SpecHelper implements unifierInterfaces.PlatformSpecHelper {
       sessionID: "apiai-mock-session-id",
       language: "en",
       spokenText: "this is the spoken text",
-      oAuthToken: "mock-google-oauth"
+      oAuthToken: "mock-google-oauth",
+      temporalAuthToken: "mock-google-temporal-auth"
     }, additionalExtractions);
 
     let context: rootInterfaces.RequestContext = Object.assign({

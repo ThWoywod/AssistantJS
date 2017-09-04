@@ -33,13 +33,21 @@ export class Extractor extends ApiAiExtractor implements unifierInterfaces.Reque
 
     return Object.assign(apiAiExtraction, {
       component: this.googleComponent,
-      oAuthToken: this.getOAuthToken(context)
+      oAuthToken: this.getOAuthToken(context),
+      temporalAuthToken: this.getTemporalToken(context)
     });
   }
 
   protected getOAuthToken(context: rootInterfaces.RequestContext): string | null {
     if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
       return context.body.originalRequest.data.user.access_token;
+    else
+      return null;
+  }
+
+  protected getTemporalToken(context: rootInterfaces.RequestContext): string | null {
+    if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user_id !== "undefined")
+      return context.body.originalRequest.data.user.user_id;
     else
       return null;
   }
