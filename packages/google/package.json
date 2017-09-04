@@ -1,6 +1,6 @@
 {
   "name": "assistant-google",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Brings google actions via api.ai to assistant.js",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"

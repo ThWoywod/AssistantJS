@@ -46,7 +46,7 @@ export class Extractor extends ApiAiExtractor implements unifierInterfaces.Reque
   }
 
   protected getTemporalToken(context: rootInterfaces.RequestContext): string | null {
-    if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user_id !== "undefined")
+    if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
       return context.body.originalRequest.data.user.user_id;
     else
       return null;
