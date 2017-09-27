@@ -12,6 +12,14 @@
     "api.ai",
     "assistant.js"
   ],
+  "homepage": "http://www.assistantjs.org",
+  "bugs": "https://github.com/webcomputing/assistant-google/issues",
+  "author": "Antonius Ostermann <ostermann.antonius@gmail.com> (http://www.antonius-ostermann.de)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webcomputing/assistant-google"
+  },
+  "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
     "assistant-source": "^0.1.0",
     "assistant-apiai": "^0.1.0"
@@ -30,8 +38,6 @@
     "reflect-metadata": "^0.1.10",
     "debug": "^2.6.8"
   },
-  "author": "Antonius Ostermann",
-  "license": "ISC",
   "main": "./lib/assistant-google.js",
   "typings": "./dts/assistant-google.d.ts",
   "publishConfig": {
