@@ -1,3 +1,3 @@
 import { debug } from "debug";
 
-export const log = debug("assistant-apiai")
+export const log = debug("assistant-google")
