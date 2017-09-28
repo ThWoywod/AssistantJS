@@ -1,13 +1,13 @@
 {
   "name": "assistant-generic-utterances",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Default collection of utteranes for generic intents. Usable for platforms which do not have (all) generic intents.",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
   },
   "keywords": [
     "utterances",
-    "assistant.js"
+    "AssistantJS"
   ],
   "peerDependencies": {
     "assistant-source": "^0.1.0"
@@ -21,8 +21,14 @@
     "tslint": "^5.4.0",
     "typescript": "2.3.4"
   },
-  "author": "Antonius Ostermann",
-  "license": "ISC",
+  "homepage": "http://www.assistantjs.org",
+  "bugs": "https://github.com/webcomputing/assistant-generic-utterances/issues",
+  "author": "Antonius Ostermann <ostermann.antonius@gmail.com> (http://www.antonius-ostermann.de)",
   "main": "./lib/assistant-generic-utterances.js",
-  "typings": "./dts/assistant-generic-utterances.d.ts"
+  "typings": "./dts/assistant-generic-utterances.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webcomputing/assistant-generic-utterances/"
+  },
+  "license": "SEE LICENSE IN <LICENSE>"
 }
