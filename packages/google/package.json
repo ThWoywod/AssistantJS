@@ -1,6 +1,6 @@
 {
   "name": "assistant-google",
-  "version": "0.1.5",
+  "version": "0.1.0",
   "description": "Brings google actions via api.ai to assistant.js",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
@@ -39,8 +39,5 @@
     "debug": "^2.6.8"
   },
   "main": "./lib/assistant-google.js",
-  "typings": "./dts/assistant-google.d.ts",
-  "publishConfig": {
-    "registry": "http://sinopia.verstehe.local:4873"
-  }
+  "typings": "./dts/assistant-google.d.ts"
 }
