@@ -1,0 +1,7 @@
+version 0.1.1
+- adds LICENSE file pointing to AssistantJS's license 
+- adds metadata to package.json
+- introduces CHANGELOG
+
+version 0.1.0
+- initial public release
