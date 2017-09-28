@@ -1,6 +1,6 @@
 {
   "name": "assistant-generic-utterances",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "Default collection of utteranes for generic intents. Usable for platforms which do not have (all) generic intents.",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
@@ -24,8 +24,5 @@
   "author": "Antonius Ostermann",
   "license": "ISC",
   "main": "./lib/assistant-generic-utterances.js",
-  "typings": "./dts/assistant-generic-utterances.d.ts",
-  "publishConfig": {
-    "registry": "http://sinopia.verstehe.local:4873"
-  }
+  "typings": "./dts/assistant-generic-utterances.d.ts"
 }
