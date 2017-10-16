@@ -8,7 +8,9 @@
     "{aber|}{ja|natürlich|selbstverständlich|klar|jap|jupp|jo|jau|klar|natürlich}"
   ],
   "noGenericIntent": [
-    "natürlich {nein|nicht}"
+    "{natürlich|absolut|selbstverständlich|} nicht",
+    "nein",
+    "ne"
   ],
   "cancelGenericIntent": [
     "{abbrechen|Abbruch}"
