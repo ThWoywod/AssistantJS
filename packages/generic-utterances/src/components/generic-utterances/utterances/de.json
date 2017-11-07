@@ -9,8 +9,7 @@
   ],
   "noGenericIntent": [
     "{natürlich|absolut|selbstverständlich|} nicht",
-    "nein",
-    "ne"
+    "{nein|ne|nö}"
   ],
   "cancelGenericIntent": [
     "{abbrechen|Abbruch}"
