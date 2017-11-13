@@ -1,7 +1,7 @@
 {
   "name": "assistant-google",
   "version": "0.2.0",
-  "description": "Enables integration of google actions in assistant.js (via dialogflow)",
+  "description": "Enables integration of google actions into assistant.js (via dialogflow)",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
   },
