@@ -1,0 +1,12 @@
+version 0.2
+- introduces FORCED_GOOGLE_OAUTH_TOKEN
+- adds support for cards
+- adds support for suggestion chips
+- adds support for reprompts
+- adds support for chat bubbles / text messages
+- changes to google api version 2
+- adds google webhook interfaces
+- introduces CHANGELOG and README
+
+version 0.1
+- initial public release
