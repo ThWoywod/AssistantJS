@@ -1,7 +1,7 @@
 {
   "name": "assistant-google",
-  "version": "0.1.0",
-  "description": "Brings google actions via api.ai to assistant.js",
+  "version": "0.2.0",
+  "description": "Enables integration of google actions into assistant.js (via dialogflow)",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
   },
@@ -10,6 +10,7 @@
     "google actions",
     "google home",
     "api.ai",
+    "dialogflow",
     "assistant.js"
   ],
   "homepage": "http://www.assistantjs.org",
@@ -21,12 +22,12 @@
   },
   "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
-    "assistant-source": "^0.1.0",
-    "assistant-apiai": "^0.1.0"
+    "assistant-source": "^0.2.0",
+    "assistant-apiai": "^0.2.0"
   },
   "devDependencies": {
-    "assistant-source": "^0.1.0",
-    "assistant-apiai": "^0.1.0",
+    "assistant-source": "^0.2.0",
+    "assistant-apiai": "^0.2.0",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-tslint": "^8.1.0",
