@@ -109,8 +109,6 @@ export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
 
     // Create body by merging api ai response with goole data info
     const body = Object.assign({}, apiAiResponse, { "data": { "google": googleData } });
-
-    log("Responding with ", body);
     return body;
   }
 
