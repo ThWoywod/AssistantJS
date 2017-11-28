@@ -59,16 +59,16 @@ export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
       googleData.noInputPrompts = this.reprompts.map(reprompt => this.buildSimpleResponse(this.detectIfSSML(reprompt), reprompt));
     }
 
-    // Add sign in requirement if wanted
+    // Decide the kind of response: forceAuthenticated, simple, rich?
     if (this.forceAuthenticated) {
-      googleData.systemIntent = {
-        "intent": "actions.intent.SIGN_IN",
-        "inputValueData": {}
-      };
-    }
-
-    // If we are not using any special fields, just use the "speech" attribute
-    if (this.cardBody === null && this.reprompts === null && this.suggestionChips === null && this.cardTitle === null) {
+      // Forcing token authentication is currently impossible, see also 
+      // https://stackoverflow.com/questions/47393868/reject-oauth-token-with-google-assistant-and-dialogflow
+      // Let's just send a simple response with endSession = true instead, so developers can tell their users to relink
+      // their account on their own.
+      googleData.speech = apiAiResponse.speech;
+      googleData.expectUserResponse = false;
+    } else if (this.cardBody === null && this.reprompts === null && this.suggestionChips === null && this.cardTitle === null) {
+      // If we are not using any special fields, just use the "speech" attribute
       googleData.speech = apiAiResponse.speech;
     } else {
       // Create response object
