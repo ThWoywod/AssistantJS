@@ -2,19 +2,30 @@
   "helpGenericIntent": [
     "{Hilfe|Hilf}",
     "Kannst du {mir|mir bitte|bitte} helfen?",
-    "Hilf mir {bitte|}"
+    "Hilf mir {bitte|}",
+    "Was kann ich {tun|machen|erledigen}?",
+    "Wie {geht|funktioniert} das?",
+    "Wozu ist das da?",
+    "Was kann ich hier tun?",
+    "Was für Möglichkeiten habe ich?",
+    "Was kannst du?",
+    "Was kann {dieser Skill|diese App|diese Anwendung}?"
   ],
   "yesGenericIntent": [
-    "{aber|}{ja|natürlich|selbstverständlich|klar|jap|jupp|jo|jau|klar|natürlich}"
+    "{ja|natürlich|selbstverständlich|klar|okay}",
+    "aber ja",
+    "sicher doch",
+    "sicher"
   ],
   "noGenericIntent": [
     "{natürlich|absolut|selbstverständlich|} nicht",
     "{nein|ne|nö}"
   ],
   "cancelGenericIntent": [
-    "{abbrechen|Abbruch}"
+    "{abbrechen|Abbruch|canceln}"
   ],
   "stopGenericIntent": [
-    "{Stopp|Halt}"
+    "{Stopp|Halt|stoppen|aufhören|beenden|verlassen}",
+    "{App|Skill|Anwendung} {beenden|verlassen}"
   ]
 }
