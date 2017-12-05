@@ -1,3 +1,6 @@
+version 0.2.2
+- fixes displayText, now uses apiai displayText instead of voiceMessage
+
 version 0.2.1
 - fixes forceAuthenticated interface, makes it send a simple voice response
 

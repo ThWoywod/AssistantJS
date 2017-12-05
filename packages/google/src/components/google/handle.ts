@@ -83,7 +83,7 @@ export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
 
       // Add first simpleResponse object
       let mainResponse = this.buildSimpleResponse(this.isSSML, apiAiResponse.speech);
-      mainResponse.displayText = this.chatBubbles !== null && this.chatBubbles.length >= 1 ? this.chatBubbles[0] : apiAiResponse.speech;
+      mainResponse.displayText = this.chatBubbles !== null && this.chatBubbles.length >= 1 ? this.chatBubbles[0] : apiAiResponse.displayText;
       richResponse.items.push({"simpleResponse": mainResponse});
 
       // Add possible second simpleResponse object
