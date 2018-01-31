@@ -9,17 +9,23 @@
     "Was kann ich hier tun?",
     "Was für Möglichkeiten habe ich?",
     "Was kannst du?",
-    "Was kann {dieser Skill|diese App|diese Anwendung}?"
+    "Was kann {dieser Skill|diese App|diese Anwendung}?",
+    "wie bitte",
+    "was war das",
+    "was hast du gesagt"
   ],
   "yesGenericIntent": [
     "{ja|natürlich|selbstverständlich|klar|okay}",
     "aber ja",
     "sicher doch",
-    "sicher"
+    "sicher",
+    "ja bitte"
   ],
   "noGenericIntent": [
     "{natürlich|absolut|selbstverständlich|} nicht",
-    "{nein|ne|nö}"
+    "{nein|ne|nö}",
+    "nein danke",
+    "danke nein"
   ],
   "cancelGenericIntent": [
     "{abbrechen|Abbruch|canceln}"

@@ -11,12 +11,15 @@
     "What are your abilities?"
   ],
   "yesGenericIntent": [
-    "{yes|yeah|of course|absolutely}"
+    "{yes|yeah|of course|absolutely}",
+    "yes please"
   ],
   "noGenericIntent": [
     "{no|nope}",
     "not{| at all}",
-    "absolutely not"
+    "absolutely not",
+    "no thanks",
+    "no but thank you"
   ],
   "cancelGenericIntent": [
     "{cancel|abort}"
