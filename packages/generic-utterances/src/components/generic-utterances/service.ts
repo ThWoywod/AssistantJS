@@ -1,10 +1,10 @@
 import { injectable, inject } from "inversify";
 import { Component } from "inversify-components";
-import { unifierInterfaces } from "assistant-source";
+import { PlatformGenerator } from "assistant-source";
 import * as fs from "fs";
 
 @injectable()
-export class GeneratorUtteranceTemplateService implements unifierInterfaces.GeneratorUtteranceTemplateService {
+export class GeneratorUtteranceTemplateService implements PlatformGenerator.UtteranceTemplateService {
   getUtterancesFor(language: string) {
     let utterancePath = __dirname + "/utterances/" + language + ".json";
 
