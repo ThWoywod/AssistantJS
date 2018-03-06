@@ -1,14 +1,15 @@
-import { unifierInterfaces, rootInterfaces } from "assistant-source";
+import { RequestContext } from "assistant-source";
 import { Extractor } from "../src/components/google/extractor";
 import { validRequestContext } from "./support/mocks/request-context";
+import { componentInterfaces } from "assistant-source/lib/components/unifier/private-interfaces"
 
 describe("RequestExtractor", function() {
   let extractor: Extractor;
-  let context: rootInterfaces.RequestContext;
+  let context: RequestContext;
 
   beforeEach(function() {
     // There is an apiai and our google extractor registerd. Filter for our extractor
-    extractor = this.container.inversifyInstance.getAll(unifierInterfaces.componentInterfaces.requestProcessor).filter(e => typeof e.googleComponent !== "undefined")[0];
+    extractor = this.container.inversifyInstance.getAll(componentInterfaces.requestProcessor).filter(e => typeof e.googleComponent !== "undefined")[0];
     context = Object.assign({}, validRequestContext);
   });
 
@@ -20,7 +21,7 @@ describe("RequestExtractor", function() {
         intent: "testIntent",
         entities: {},
         language: "en",
-        component: extractor.googleComponent,
+        platform: "google",
         oAuthToken: "my-access-token",
         temporalAuthToken: "my-user-id",
         spokenText: "My query"

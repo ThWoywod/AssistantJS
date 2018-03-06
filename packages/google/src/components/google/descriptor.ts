@@ -1,5 +1,5 @@
 import { ComponentDescriptor } from "inversify-components";
-import { unifierInterfaces } from "assistant-source";
+import { RequestExtractor } from "assistant-source";
 import { Extractor } from "./extractor";
 import { GoogleHandle } from "./handle";
 
@@ -9,7 +9,7 @@ export let descriptor: ComponentDescriptor = {
   bindings: {
     root: (bindService, lookupService) => {
       bindService
-        .bindExtension<unifierInterfaces.RequestConversationExtractor>(lookupService.lookup("core:unifier").getInterface("requestProcessor"))
+        .bindExtension<RequestExtractor>(lookupService.lookup("core:unifier").getInterface("requestProcessor"))
         .to(Extractor);
     },
     request: (bindService) => {

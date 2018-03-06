@@ -1,4 +1,4 @@
-import { unifierInterfaces, rootInterfaces } from "assistant-source";
+import { RequestExtractor, RequestContext, injectionNames, Logger } from "assistant-source";
 import { Extractor as ApiAiExtractor } from "assistant-apiai"
 import { injectable, inject, optional } from "inversify";
 import { Component } from "inversify-components";
@@ -7,38 +7,41 @@ import { Extraction } from "./interfaces";
 import { log } from "../../global";
 
 @injectable()
-export class Extractor extends ApiAiExtractor implements unifierInterfaces.RequestConversationExtractor {
+export class Extractor extends ApiAiExtractor implements RequestExtractor {
   googleComponent: Component;
+  private rootLogger: Logger;
 
   constructor(
     @inject("meta:component//google") googleComponent: Component,
-    @optional() @inject("meta:component//apiai") componentMeta?: Component
+    @inject(injectionNames.logger) logger: Logger,
+    @optional() @inject("meta:component//apiai") componentMeta?: Component<any>
   ) {
     if (typeof componentMeta === "undefined") throw new Error("Could not find api.ai component. You cannot use the google assistant platform without 'assistant-apiai'!");
-    super(componentMeta);
+    super(componentMeta, logger);
 
+    this.rootLogger = logger;
     this.googleComponent = googleComponent;
   }
 
-  async fits(context: rootInterfaces.RequestContext) {
+  async fits(context: RequestContext) {
     let apiAiFits = await super.fits(context);
     if (!apiAiFits) return false;
 
     return typeof context.body.originalRequest !== "undefined" && context.body.originalRequest.data !== "undefined" && context.body.originalRequest.data.device !== "undefined"
   }
 
-  async extract(context: rootInterfaces.RequestContext): Promise<Extraction> {
+  async extract(context: RequestContext): Promise<Extraction> {
     log("Extracting request on google platform...");
     let apiAiExtraction = await super.extract(context);
 
     return Object.assign(apiAiExtraction, {
-      component: this.googleComponent,
+      platform: this.googleComponent.name,
       oAuthToken: this.getOAuthToken(context),
       temporalAuthToken: this.getTemporalToken(context)
     });
   }
 
-  protected getOAuthToken(context: rootInterfaces.RequestContext): string | null {
+  protected getOAuthToken(context: RequestContext): string | null {
     const oAuthMock = process.env.FORCED_GOOGLE_OAUTH_TOKEN;
     
     if (typeof oAuthMock !== "undefined") {
@@ -51,7 +54,7 @@ export class Extractor extends ApiAiExtractor implements unifierInterfaces.Reque
       return null;
   }
 
-  protected getTemporalToken(context: rootInterfaces.RequestContext): string | null {
+  protected getTemporalToken(context: RequestContext): string | null {
     if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
       return context.body.originalRequest.data.user.userId;
     else

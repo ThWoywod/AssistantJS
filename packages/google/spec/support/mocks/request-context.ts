@@ -1,7 +1,8 @@
-import { unifierInterfaces, rootInterfaces } from "assistant-source";
+import { RequestContext } from "assistant-source";
 
-export const validRequestContext: rootInterfaces.RequestContext = {
+export const validRequestContext: RequestContext = {
   responseCallback: () => {},
+  id: 'my-request-id',
   path: '/apiai',
   method: 'POST',
   headers: {},
