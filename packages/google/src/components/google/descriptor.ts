@@ -2,11 +2,11 @@ import { ComponentDescriptor } from "inversify-components";
 import { RequestExtractor } from "assistant-source";
 import { Extractor } from "./extractor";
 import { GoogleHandle } from "./handle";
-import { Configuration } from "./private-interfaces";
+import { Configuration, COMPONENT_NAME } from "./private-interfaces";
 
 
 export let descriptor: ComponentDescriptor<Configuration.Defaults> = {
-  name: "google",
+  name: COMPONENT_NAME,
   bindings: {
     root: (bindService, lookupService) => {
       bindService

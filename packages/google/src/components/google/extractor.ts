@@ -1,9 +1,10 @@
-import { RequestExtractor, RequestContext, injectionNames, Logger } from "assistant-source";
+import { RequestExtractor, RequestContext, injectionNames, Logger, ComponentSpecificLoggerFactory } from "assistant-source";
 import { Extractor as ApiAiExtractor } from "assistant-apiai"
 import { injectable, inject, optional } from "inversify";
 import { Component } from "inversify-components";
 
 import { Extraction, Device } from "./public-interfaces";
+import { COMPONENT_NAME } from "./private-interfaces";
 
 @injectable()
 export class Extractor extends ApiAiExtractor implements RequestExtractor {
@@ -12,13 +13,13 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
   constructor(
     @inject("meta:component//google") googleComponent: Component,
-    @inject(injectionNames.logger) logger: Logger,
+    @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory,
     @optional() @inject("meta:component//apiai") componentMeta?: Component<any>
   ) {
     if (typeof componentMeta === "undefined") throw new Error("Could not find api.ai component. You cannot use the google assistant platform without 'assistant-apiai'!");
-    super(componentMeta, logger);
+    super(componentMeta, loggerFactory);
 
-    this.rootLogger = logger;
+    this.rootLogger = loggerFactory(COMPONENT_NAME, "root");
     this.googleComponent = googleComponent;
   }
 
@@ -26,7 +27,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     let apiAiFits = await super.fits(context);
     if (!apiAiFits) return false;
 
-    this.rootLogger.debug("Google: Requests fits for dialogflow, now checking if all needed google data is contained.", { requestId: context.id });
+    this.rootLogger.debug({ requestId: context.id }, "Requests fits for dialogflow, now checking if all needed google data is contained.");
 
     return  typeof context.body.originalRequest !== "undefined" && 
       typeof context.body.originalRequest.data !== "undefined" && 
@@ -36,7 +37,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   }
 
   async extract(context: RequestContext): Promise<Extraction> {
-    this.rootLogger.info("Google: Extracting request on google platform...", { requestId: context.id });
+    this.rootLogger.info({ requestId: context.id }, "Extracting request on google platform...");
     let apiAiExtraction = await super.extract(context);
 
     return Object.assign(apiAiExtraction, {
@@ -56,7 +57,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     const oAuthMock = process.env.FORCED_GOOGLE_OAUTH_TOKEN;
     
     if (typeof oAuthMock !== "undefined") {
-      this.rootLogger.warn("Google: Using preconfigured mock oauth tocken..", { requestId: context.id });
+      this.rootLogger.warn({ requestId: context.id }, "Using preconfigured mock oauth tocken..");
       return oAuthMock;
     }
     else if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
