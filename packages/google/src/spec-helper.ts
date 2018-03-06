@@ -1,7 +1,7 @@
 import { Component } from "inversify-components";
 import { SpecSetup, PlatformSpecHelper, intent, RequestContext } from "assistant-source";
 
-import { Extraction, HandlerInterface } from "./components/google/interfaces";
+import { Extraction, HandlerInterface } from "./components/google/public-interfaces";
 import { GoogleHandle } from "./components/google/handle";
 
 export class SpecHelper implements PlatformSpecHelper {

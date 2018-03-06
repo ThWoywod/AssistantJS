@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { AbstractResponseHandler, ResponseCallback, RequestContext } from "assistant-source"
 import { ApiAiHandle } from "assistant-apiai";
-import { HandlerInterface, GoogleWebhook } from "./interfaces";
+import { HandlerInterface, GoogleWebhook } from "./public-interfaces";
 import { log } from "../../global";
 import { Component } from "inversify-components";
 

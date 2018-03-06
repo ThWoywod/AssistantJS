@@ -1,5 +1,14 @@
 import { OptionalHandlerFeatures, OptionalExtractions } from "assistant-source";
 import { Extraction as ApiAiExtraction, HandlerInterface as ApiAiHandler } from "assistant-apiai";
+import { Configuration } from "./private-interfaces";
+
+/** Configuration of google component */
+export interface GoogleConfiguration extends Partial<Configuration.Defaults>, Configuration.Required {};
+
+/** Property describing the configuration of the google component */
+export interface GoogleConfigurationAttribute {
+  "google"?: GoogleConfiguration;
+}
 
 export interface Extraction extends 
   ApiAiExtraction,

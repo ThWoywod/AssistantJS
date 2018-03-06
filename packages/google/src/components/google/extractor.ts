@@ -3,7 +3,7 @@ import { Extractor as ApiAiExtractor } from "assistant-apiai"
 import { injectable, inject, optional } from "inversify";
 import { Component } from "inversify-components";
 
-import { Extraction } from "./interfaces";
+import { Extraction } from "./public-interfaces";
 import { log } from "../../global";
 
 @injectable()
