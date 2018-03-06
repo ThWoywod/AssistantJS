@@ -19,7 +19,8 @@ export class SpecHelper implements PlatformSpecHelper {
       language: "en",
       spokenText: "this is the spoken text",
       oAuthToken: "mock-google-oauth",
-      temporalAuthToken: "mock-google-temporal-auth"
+      temporalAuthToken: "mock-google-temporal-auth",
+      device: "phone"
     }, additionalExtractions);
 
     let context: RequestContext = Object.assign({

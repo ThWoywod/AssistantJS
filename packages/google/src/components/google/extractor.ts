@@ -3,7 +3,7 @@ import { Extractor as ApiAiExtractor } from "assistant-apiai"
 import { injectable, inject, optional } from "inversify";
 import { Component } from "inversify-components";
 
-import { Extraction } from "./public-interfaces";
+import { Extraction, Device } from "./public-interfaces";
 
 @injectable()
 export class Extractor extends ApiAiExtractor implements RequestExtractor {
@@ -26,7 +26,11 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     let apiAiFits = await super.fits(context);
     if (!apiAiFits) return false;
 
-    return typeof context.body.originalRequest !== "undefined" && context.body.originalRequest.data !== "undefined" && context.body.originalRequest.data.device !== "undefined"
+    return  typeof context.body.originalRequest !== "undefined" && 
+      typeof context.body.originalRequest.data !== "undefined" && 
+      typeof context.body.originalRequest.data.device !== "undefined" &&
+      typeof context.body.originalRequest.data.surface !== "undefined" &&
+      typeof context.body.originalRequest.data.surface.capabilities !== "undefined";
   }
 
   async extract(context: RequestContext): Promise<Extraction> {
@@ -36,8 +40,14 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     return Object.assign(apiAiExtraction, {
       platform: this.googleComponent.name,
       oAuthToken: this.getOAuthToken(context),
-      temporalAuthToken: this.getTemporalToken(context)
+      temporalAuthToken: this.getTemporalToken(context),
+      device: this.getDevice(context)
     });
+  }
+
+  protected getDevice(context: RequestContext): Device {
+    const capabilities = context.body.originalRequest.data.surface.capabilities;
+    return capabilities.map(c => c.name).indexOf("actions.capability.SCREEN_OUTPUT") === -1 ? "speaker" : "phone";
   }
 
   protected getOAuthToken(context: RequestContext): string | null {

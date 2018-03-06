@@ -10,8 +10,12 @@ export interface GoogleConfigurationAttribute {
   "google"?: GoogleConfiguration;
 }
 
+/** Possible devices this extractor can return */
+export type Device = 'phone' | 'speaker';
+
 export interface Extraction extends 
   ApiAiExtraction,
+  OptionalExtractions.DeviceExtraction,
   OptionalExtractions.TemporalAuthExtraction,
   OptionalExtractions.OAuthExtraction {}
 

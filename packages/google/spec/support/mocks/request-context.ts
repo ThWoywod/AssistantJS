@@ -9,7 +9,7 @@ export const validRequestContext: RequestContext = {
   body: {
     originalRequest: {
       data: {
-        surface: { capabilities: [ { name: "actions.capability.AUDIO_OUTPUT" } ] },
+        surface: { capabilities: [{ name: "actions.capability.AUDIO_OUTPUT" }, { name: "actions.capability.SCREEN_OUTPUT" }] },
         inputs: [ { rawInputs: [{ inputType: "VOICE", query: "My query" }], intent: 'actions.intent.MAIN' } ],
         user: { locale: 'de-DE', userId: 'my-user-id', accessToken: 'my-access-token' },
         conversation: { conversationId: '1509984249465', type: 'NEW' },
