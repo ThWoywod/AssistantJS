@@ -26,6 +26,8 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     let apiAiFits = await super.fits(context);
     if (!apiAiFits) return false;
 
+    this.rootLogger.debug("Google: Requests fits for dialogflow, now checking if all needed google data is contained.", { requestId: context.id });
+
     return  typeof context.body.originalRequest !== "undefined" && 
       typeof context.body.originalRequest.data !== "undefined" && 
       typeof context.body.originalRequest.data.device !== "undefined" &&
@@ -34,7 +36,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   }
 
   async extract(context: RequestContext): Promise<Extraction> {
-    this.rootLogger.info("Extracting request on google platform...", { requestId: context.id });
+    this.rootLogger.info("Google: Extracting request on google platform...", { requestId: context.id });
     let apiAiExtraction = await super.extract(context);
 
     return Object.assign(apiAiExtraction, {
@@ -54,7 +56,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     const oAuthMock = process.env.FORCED_GOOGLE_OAUTH_TOKEN;
     
     if (typeof oAuthMock !== "undefined") {
-      this.rootLogger.warn("Using preconfigured mock oauth tocken..", { requestId: context.id });
+      this.rootLogger.warn("Google: Using preconfigured mock oauth tocken..", { requestId: context.id });
       return oAuthMock;
     }
     else if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
