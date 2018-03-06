@@ -4,7 +4,6 @@ import { injectable, inject, optional } from "inversify";
 import { Component } from "inversify-components";
 
 import { Extraction } from "./public-interfaces";
-import { log } from "../../global";
 
 @injectable()
 export class Extractor extends ApiAiExtractor implements RequestExtractor {
@@ -31,7 +30,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   }
 
   async extract(context: RequestContext): Promise<Extraction> {
-    log("Extracting request on google platform...");
+    this.rootLogger.info("Extracting request on google platform...", { requestId: context.id });
     let apiAiExtraction = await super.extract(context);
 
     return Object.assign(apiAiExtraction, {
@@ -45,7 +44,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     const oAuthMock = process.env.FORCED_GOOGLE_OAUTH_TOKEN;
     
     if (typeof oAuthMock !== "undefined") {
-      log("Using preconfigured mock oauth tocken..");
+      this.rootLogger.warn("Using preconfigured mock oauth tocken..", { requestId: context.id });
       return oAuthMock;
     }
     else if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")

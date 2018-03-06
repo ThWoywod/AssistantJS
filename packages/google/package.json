@@ -29,7 +29,6 @@
     "@types/jasmine": "^2.5.48",
     "assistant-source": "../assistant-source/assistant-source-0.3.0.tgz",
     "assistant-apiai": "../assistant-apiai/assistant-apiai-0.3.0.tgz",
-    "debug": "^2.6.8",
     "express": "^4.16.2",
     "fakeredis": "^2.0.0",
     "gulp": "^3.9.1",
