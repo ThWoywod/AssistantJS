@@ -1,6 +1,6 @@
 {
   "name": "assistant-generic-utterances",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Default collection of utteranes for generic intents. Usable for platforms which do not have (all) generic intents.",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
@@ -10,7 +10,7 @@
     "AssistantJS"
   ],
   "peerDependencies": {
-    "assistant-source": ">=0.1.0"
+    "assistant-source": "<0.3.0"
   },
   "devDependencies": {
     "assistant-source": "^0.2.0",
