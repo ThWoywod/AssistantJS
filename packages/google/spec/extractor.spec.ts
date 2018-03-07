@@ -1,41 +1,55 @@
-import { unifierInterfaces, rootInterfaces } from "assistant-source";
+import { RequestContext } from "assistant-source";
 import { Extractor } from "../src/components/google/extractor";
 import { validRequestContext } from "./support/mocks/request-context";
+import { componentInterfaces } from "assistant-source/lib/components/unifier/private-interfaces"
 
 describe("RequestExtractor", function() {
-  let extractor: Extractor;
-  let context: rootInterfaces.RequestContext;
 
   beforeEach(function() {
     // There is an apiai and our google extractor registerd. Filter for our extractor
-    extractor = this.container.inversifyInstance.getAll(unifierInterfaces.componentInterfaces.requestProcessor).filter(e => typeof e.googleComponent !== "undefined")[0];
-    context = Object.assign({}, validRequestContext);
+    this.extractor = this.container.inversifyInstance.getAll(componentInterfaces.requestProcessor).filter(e => typeof e.googleComponent !== "undefined")[0];
+    this.context = {...validRequestContext};
+
+    this.expectedExtraction = {
+      sessionID: "apiai-my-session-id",
+      intent: "testIntent",
+      entities: {},
+      language: "en",
+      platform: "google",
+      oAuthToken: "my-access-token",
+      temporalAuthToken: "my-user-id",
+      spokenText: "My query",
+      device: "phone"
+    };
   });
 
   describe("extract", function() {
     it("returns correct extraction", async function(done) {
-      this.extraction = await extractor.extract(context);
-      expect(this.extraction).toEqual({
-        sessionID: "apiai-my-session-id",
-        intent: "testIntent",
-        entities: {},
-        language: "en",
-        component: extractor.googleComponent,
-        oAuthToken: "my-access-token",
-        temporalAuthToken: "my-user-id",
-        spokenText: "My query"
-      });
+      this.extraction = await this.extractor.extract(this.context);
+      expect(this.extraction).toEqual(this.expectedExtraction);
       done()
     });
 
-    describe("with FORCED_ALEXA_OAUTH_TOKEN environment variable given", function() {
+    describe("with no screen capabilities", function() {
+      beforeEach(function() {
+        this.context.body.originalRequest.data.surface.capabilities = [{ name: "actions.capability.AUDIO_OUTPUT" }];
+      });
+
+      it("sets device to speaker", async function(done) {
+        this.extraction = await this.extractor.extract(this.context);
+        expect(this.extraction).toEqual({...this.expectedExtraction, device: "speaker"});
+        done();
+      });
+    });
+
+    describe("with FORCED_GOOGLE_OAUTH_TOKEN environment variable given", function() {
       beforeEach(async function(done) {
         process.env.FORCED_GOOGLE_OAUTH_TOKEN = "test";
-        this.extraction = await extractor.extract(context);
+        this.extraction = await this.extractor.extract(this.context);
         done();
       });
 
-      it("returns content of FORCED_ALEXA_OAUTH_TOKEN as extraction result", function() {
+      it("returns content of FORCED_GOOGLE_OAUTH_TOKEN as extraction result", function() {
         expect(this.extraction.oAuthToken).toEqual("test");
       });
     });

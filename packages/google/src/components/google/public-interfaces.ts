@@ -1,20 +1,33 @@
-import { unifierInterfaces } from "assistant-source";
+import { OptionalHandlerFeatures, OptionalExtractions } from "assistant-source";
 import { Extraction as ApiAiExtraction, HandlerInterface as ApiAiHandler } from "assistant-apiai";
+import { Configuration } from "./private-interfaces";
+
+/** Configuration of google component */
+export interface GoogleConfiguration extends Partial<Configuration.Defaults>, Configuration.Required {};
+
+/** Property describing the configuration of the google component */
+export interface GoogleConfigurationAttribute {
+  "google"?: GoogleConfiguration;
+}
+
+/** Possible devices this extractor can return */
+export type Device = 'phone' | 'speaker';
 
 export interface Extraction extends 
   ApiAiExtraction,
-  unifierInterfaces.OptionalExtractions.TemporalAuthExtraction,
-  unifierInterfaces.OptionalExtractions.OAuthExtraction {}
+  OptionalExtractions.DeviceExtraction,
+  OptionalExtractions.TemporalAuthExtraction,
+  OptionalExtractions.OAuthExtraction {}
 
 export interface HandlerInterface extends
   ApiAiHandler,
-  unifierInterfaces.OptionalHandlerFeatures.SSMLHandler,
-  unifierInterfaces.OptionalHandlerFeatures.Reprompt,
-  unifierInterfaces.OptionalHandlerFeatures.GUI.Card.Simple,
-  unifierInterfaces.OptionalHandlerFeatures.GUI.Card.Image,
-  unifierInterfaces.OptionalHandlerFeatures.GUI.SuggestionChip,
-  unifierInterfaces.OptionalHandlerFeatures.GUI.ChatBubble,
-  unifierInterfaces.OptionalHandlerFeatures.AuthenticationHandler {
+  OptionalHandlerFeatures.SSMLHandler,
+  OptionalHandlerFeatures.Reprompt,
+  OptionalHandlerFeatures.GUI.Card.Simple,
+  OptionalHandlerFeatures.GUI.Card.Image,
+  OptionalHandlerFeatures.GUI.SuggestionChip,
+  OptionalHandlerFeatures.GUI.ChatBubble,
+  OptionalHandlerFeatures.AuthenticationHandler {
     getBody(): {
       speech?: string;
       displayText?: string;

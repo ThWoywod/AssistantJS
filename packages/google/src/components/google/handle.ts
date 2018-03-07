@@ -1,13 +1,12 @@
 import { inject, injectable } from "inversify";
-import { unifierInterfaces, rootInterfaces, AbstractResponseHandler } from "assistant-source"
+import { AbstractResponseHandler, ResponseCallback, RequestContext } from "assistant-source"
 import { ApiAiHandle } from "assistant-apiai";
-import { HandlerInterface, GoogleWebhook } from "./interfaces";
-import { log } from "../../global";
+import { HandlerInterface, GoogleWebhook } from "./public-interfaces";
 import { Component } from "inversify-components";
 
 @injectable()
 export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
-  responseCallback: rootInterfaces.ResponseCallback;
+  responseCallback: ResponseCallback;
 
   isSSML: boolean = false;
   forceAuthenticated: boolean = false;
@@ -20,9 +19,9 @@ export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
   cardImage: string | null = null;
   
   constructor(
-    @inject("core:root:current-request-context") extraction: rootInterfaces.RequestContext,
+    @inject("core:root:current-request-context") extraction: RequestContext,
     @inject("core:unifier:current-kill-session-promise") killSession: () => Promise<void>,
-    @inject("meta:component//apiai") componentMeta: Component
+    @inject("meta:component//apiai") componentMeta: Component<any>
   ) {
     super(extraction, killSession, componentMeta);
   }
