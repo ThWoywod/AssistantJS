@@ -1,3 +1,6 @@
+version 0.5.0
+- makes assistant-generic-utterances compatible with assistant-source 0.3.0
+
 version 0.4.1
 - adds version restriction: makes 0.4.1 only compatible with assistant-source < 0.3.0
 
