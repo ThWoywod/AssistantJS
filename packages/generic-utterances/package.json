@@ -10,7 +10,7 @@
     "AssistantJS"
   ],
   "peerDependencies": {
-    "assistant-source": ">=0.1.0"
+    "assistant-source": "<0.3.0"
   },
   "devDependencies": {
     "assistant-source": "^0.2.0",
