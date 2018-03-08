@@ -1,3 +1,6 @@
+version 0.3.1
+- fixes bug in fits() method, making assistant-google denying all incomming requests
+
 version 0.3.0
 - makes assistant-google compatible with assistant-source 0.3.0
 - adds extraction of used device: 'phone' for smart phone, 'speaker' for smart speaker
