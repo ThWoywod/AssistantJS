@@ -1,5 +1,5 @@
 import { RequestExtractor, RequestContext, injectionNames, Logger, ComponentSpecificLoggerFactory } from "assistant-source";
-import { Extractor as ApiAiExtractor } from "assistant-apiai"
+import { Extractor as ApiAiExtractor } from "assistant-apiai";
 import { injectable, inject, optional } from "inversify";
 import { Component } from "inversify-components";
 
@@ -14,9 +14,12 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   constructor(
     @inject("meta:component//google") googleComponent: Component,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory,
-    @optional() @inject("meta:component//apiai") componentMeta?: Component<any>
+    @optional()
+    @inject("meta:component//apiai")
+    componentMeta?: Component<any>
   ) {
-    if (typeof componentMeta === "undefined") throw new Error("Could not find api.ai component. You cannot use the google assistant platform without 'assistant-apiai'!");
+    if (typeof componentMeta === "undefined")
+      throw new Error("Could not find api.ai component. You cannot use the google assistant platform without 'assistant-apiai'!");
     super(componentMeta, loggerFactory);
 
     this.rootLogger = loggerFactory(COMPONENT_NAME, "root");
@@ -29,11 +32,12 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
     this.rootLogger.debug({ requestId: context.id }, "Requests fits for dialogflow, now checking if all needed google data is contained.");
 
-    return  typeof context.body.originalRequest !== "undefined" && 
-      typeof context.body.originalRequest.data !== "undefined" && 
-      typeof context.body.originalRequest.data.device !== "undefined" &&
+    return (
+      typeof context.body.originalRequest !== "undefined" &&
+      typeof context.body.originalRequest.data !== "undefined" &&
       typeof context.body.originalRequest.data.surface !== "undefined" &&
-      typeof context.body.originalRequest.data.surface.capabilities !== "undefined";
+      typeof context.body.originalRequest.data.surface.capabilities !== "undefined"
+    );
   }
 
   async extract(context: RequestContext): Promise<Extraction> {
@@ -44,7 +48,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
       platform: this.googleComponent.name,
       oAuthToken: this.getOAuthToken(context),
       temporalAuthToken: this.getTemporalToken(context),
-      device: this.getDevice(context)
+      device: this.getDevice(context),
     });
   }
 
@@ -55,21 +59,18 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
   protected getOAuthToken(context: RequestContext): string | null {
     const oAuthMock = process.env.FORCED_GOOGLE_OAUTH_TOKEN;
-    
+
     if (typeof oAuthMock !== "undefined") {
       this.rootLogger.warn({ requestId: context.id }, "Using preconfigured mock oauth tocken..");
       return oAuthMock;
-    }
-    else if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
+    } else if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
       return context.body.originalRequest.data.user.accessToken;
-    else
-      return null;
+    else return null;
   }
 
   protected getTemporalToken(context: RequestContext): string | null {
     if (typeof context.body.originalRequest.data !== "undefined" && typeof context.body.originalRequest.data.user !== "undefined")
       return context.body.originalRequest.data.user.userId;
-    else
-      return null;
+    else return null;
   }
 }
