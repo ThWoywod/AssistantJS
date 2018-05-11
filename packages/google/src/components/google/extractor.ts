@@ -73,4 +73,23 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
       return context.body.originalRequest.data.user.userId;
     else return null;
   }
+
+  /**
+   * get inital spokentext from context or delegate to apiai implementation
+   * @param context 
+   */
+  protected getSpokenText(context: RequestContext): string {
+
+    if(context.body.originalRequest
+      && context.body.originalRequest.data 
+      && context.body.originalRequest.data.inputs 
+      && context.body.originalRequest.data.inputs[0] 
+      && context.body.originalRequest.data.inputs[0].rawInputs
+      && context.body.originalRequest.data.inputs[0].rawInputs[0]){
+      return context.body.originalRequest.data.inputs[0].rawInputs[0].query;
+    }
+
+
+    return super.getSpokenText(context);
+  }
 }
