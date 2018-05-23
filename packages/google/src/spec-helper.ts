@@ -20,7 +20,8 @@ export class SpecHelper implements PlatformSpecHelper {
       spokenText: "this is the spoken text",
       oAuthToken: "mock-google-oauth",
       temporalAuthToken: "mock-google-temporal-auth",
-      device: "phone"
+      device: "phone",
+      additionalParameters: {}
     }, additionalExtractions);
 
     let context: RequestContext = Object.assign({
