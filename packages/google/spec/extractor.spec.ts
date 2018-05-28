@@ -11,7 +11,7 @@ describe("RequestExtractor", function() {
     this.context = {...validRequestContext};
 
     this.expectedExtraction = {
-      sessionID: "apiai-my-session-id",
+      sessionID: "my-session-id",
       intent: "testIntent",
       entities: {},
       language: "en",
@@ -19,7 +19,8 @@ describe("RequestExtractor", function() {
       oAuthToken: "my-access-token",
       temporalAuthToken: "my-user-id",
       spokenText: "My query",
-      device: "phone"
+      device: "phone",
+      additionalParameters: jasmine.any(Object)
     };
   });
 
