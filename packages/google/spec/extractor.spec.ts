@@ -1,14 +1,13 @@
 import { RequestContext } from "assistant-source";
+import { componentInterfaces } from "assistant-source/lib/components/unifier/private-interfaces";
 import { Extractor } from "../src/components/google/extractor";
 import { validRequestContext } from "./support/mocks/request-context";
-import { componentInterfaces } from "assistant-source/lib/components/unifier/private-interfaces"
 
 describe("RequestExtractor", function() {
-
   beforeEach(function() {
     // There is an apiai and our google extractor registerd. Filter for our extractor
     this.extractor = this.container.inversifyInstance.getAll(componentInterfaces.requestProcessor).filter(e => typeof e.googleComponent !== "undefined")[0];
-    this.context = {...validRequestContext};
+    this.context = { ...validRequestContext };
 
     this.expectedExtraction = {
       sessionID: "my-session-id",
@@ -18,9 +17,10 @@ describe("RequestExtractor", function() {
       platform: "google",
       oAuthToken: "my-access-token",
       temporalAuthToken: "my-user-id",
+      requestTimestamp: "2017-06-24T16:00:18Z",
       spokenText: "My query",
       device: "phone",
-      additionalParameters: jasmine.any(Object)
+      additionalParameters: jasmine.any(Object),
     };
   });
 
@@ -28,7 +28,7 @@ describe("RequestExtractor", function() {
     it("returns correct extraction", async function(done) {
       this.extraction = await this.extractor.extract(this.context);
       expect(this.extraction).toEqual(this.expectedExtraction);
-      done()
+      done();
     });
 
     describe("with no screen capabilities", function() {
@@ -38,7 +38,7 @@ describe("RequestExtractor", function() {
 
       it("sets device to speaker", async function(done) {
         this.extraction = await this.extractor.extract(this.context);
-        expect(this.extraction).toEqual({...this.expectedExtraction, device: "speaker"});
+        expect(this.extraction).toEqual({ ...this.expectedExtraction, device: "speaker" });
         done();
       });
     });
