@@ -15,6 +15,7 @@ export type Device = 'phone' | 'speaker';
 
 export interface Extraction extends 
   ApiAiExtraction,
+  OptionalExtractions.SessionData,
   OptionalExtractions.Device,
   OptionalExtractions.TemporalAuth,
   OptionalExtractions.OAuth {}
@@ -27,6 +28,7 @@ export interface HandlerInterface extends
   OptionalHandlerFeatures.GUI.Card.Image,
   OptionalHandlerFeatures.GUI.SuggestionChips,
   OptionalHandlerFeatures.GUI.ChatBubbles,
+  OptionalHandlerFeatures.SessionData,
   OptionalHandlerFeatures.Authentication {
     getBody(): {
       speech?: string;
@@ -146,6 +148,9 @@ export namespace GoogleWebhook {
   }
 
   export interface Response {
+    /** An opaque token for a particular user session*/
+    userStorage?: string;
+
     /** Shall we end the session after emitting this response? */
     expectUserResponse: boolean;
   

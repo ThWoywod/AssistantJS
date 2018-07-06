@@ -17,6 +17,8 @@ export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
   cardTitle: string | null = null;
   cardBody: string | null = null;
   cardImage: string | null = null;
+
+  sessionData: string | null = null;
   
   constructor(
     @inject("core:root:current-request-context") extraction: RequestContext,
@@ -54,6 +56,11 @@ export class GoogleHandle extends ApiAiHandle implements HandlerInterface {
       "isSsml": this.isSSML
     }
 
+    // Add session data
+    if(this.sessionData !== null) {
+      googleData.userStorage = this.sessionData;
+    }
+    
     // Add reprompts
     if (this.reprompts !== null && this.reprompts.length > 0) {
       googleData.noInputPrompts = this.reprompts.map(reprompt => this.buildSimpleResponse(this.detectIfSSML(reprompt), reprompt));
