@@ -41,7 +41,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   }
 
   async extract(context: RequestContext): Promise<Extraction> {
-    this.rootLogger.info({ requestId: context.id }, "Extracting request on google platform... blablabla");
+    this.rootLogger.info({ requestId: context.id }, "Extracting request on google platform...");
     let apiAiExtraction = await super.extract(context);
 
     return Object.assign(apiAiExtraction, {
