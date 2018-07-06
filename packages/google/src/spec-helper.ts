@@ -22,7 +22,7 @@ export class SpecHelper implements PlatformSpecHelper {
         platform: "google",
         intent: intent,
         sessionID: "apiai-mock-session-id",
-        sessionData: "mock-google-session-data",
+        sessionData: "{\"mock-google-user-key\":\"my-google-user-value\"}",
         language: "en",
         spokenText: "this is the spoken text",
         oAuthToken: "mock-google-oauth",

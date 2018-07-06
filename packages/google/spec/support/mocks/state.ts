@@ -9,7 +9,7 @@ export class MainState implements State.Required {
     this.responseFactory = factory;
   }
 
-  unhandledGenericIntent() {
+  async unhandledGenericIntent() {
     this.responseFactory.createSimpleVoiceResponse().endSessionWith("Hello from google!");
   }
 
