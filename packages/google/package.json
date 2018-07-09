@@ -1,6 +1,6 @@
 {
   "name": "assistant-google",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Enables integration of google actions into assistant.js (via dialogflow)",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
@@ -22,13 +22,13 @@
   },
   "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
-    "assistant-source": "^0.3.0",
-    "assistant-apiai": "^0.3.0"
+    "assistant-source": "^0.4.0",
+    "assistant-apiai": "^0.4.0"
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.48",
-    "assistant-source": "^0.3.0",
-    "assistant-apiai": "^0.3.0",
+    "assistant-source": "internal",
+    "assistant-apiai": "internal",
     "express": "^4.16.2",
     "fakeredis": "^2.0.0",
     "gulp": "^3.9.1",
