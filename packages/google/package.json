@@ -41,7 +41,7 @@
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
     "tslint": "^5.4.0",
-    "typescript": "2.3.4"
+    "typescript": "~2.9.2"
   },
   "main": "./lib/assistant-google.js",
   "typings": "./dts/assistant-google.d.ts"
