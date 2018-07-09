@@ -15,19 +15,19 @@ export type Device = 'phone' | 'speaker';
 
 export interface Extraction extends 
   ApiAiExtraction,
-  OptionalExtractions.DeviceExtraction,
-  OptionalExtractions.TemporalAuthExtraction,
-  OptionalExtractions.OAuthExtraction {}
+  OptionalExtractions.Device,
+  OptionalExtractions.TemporalAuth,
+  OptionalExtractions.OAuth {}
 
 export interface HandlerInterface extends
   ApiAiHandler,
-  OptionalHandlerFeatures.SSMLHandler,
+  OptionalHandlerFeatures.SSML,
   OptionalHandlerFeatures.Reprompt,
   OptionalHandlerFeatures.GUI.Card.Simple,
   OptionalHandlerFeatures.GUI.Card.Image,
-  OptionalHandlerFeatures.GUI.SuggestionChip,
-  OptionalHandlerFeatures.GUI.ChatBubble,
-  OptionalHandlerFeatures.AuthenticationHandler {
+  OptionalHandlerFeatures.GUI.SuggestionChips,
+  OptionalHandlerFeatures.GUI.ChatBubbles,
+  OptionalHandlerFeatures.Authentication {
     getBody(): {
       speech?: string;
       displayText?: string;
