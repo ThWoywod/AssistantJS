@@ -11,6 +11,7 @@ describe("RequestExtractor", function() {
 
     this.expectedExtraction = {
       sessionID: "my-session-id",
+      sessionData: "{\"my-session-key\":\"my-session-value\"}",
       intent: "testIntent",
       entities: {},
       language: "en",

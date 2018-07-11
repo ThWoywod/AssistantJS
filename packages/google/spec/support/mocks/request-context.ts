@@ -11,7 +11,7 @@ export const validRequestContext: RequestContext = {
       data: {
         surface: { capabilities: [{ name: "actions.capability.AUDIO_OUTPUT" }, { name: "actions.capability.SCREEN_OUTPUT" }] },
         inputs: [{ rawInputs: [{ inputType: "VOICE", query: "My query" }], intent: "actions.intent.MAIN" }],
-        user: { locale: "de-DE", userId: "my-user-id", accessToken: "my-access-token" },
+        user: { locale: "de-DE", userId: "my-user-id", accessToken: "my-access-token", userStorage: "{\"my-session-key\":\"my-session-value\"}"},
         conversation: { conversationId: "1509984249465", type: "NEW" },
         availableSurfaces: [{ capabilities: [{ name: "actions.capability.AUDIO_OUTPUT" }, { name: "actions.capability.SCREEN_OUTPUT" }] }],
       },

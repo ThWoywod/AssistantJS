@@ -46,6 +46,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
     return Object.assign(apiAiExtraction, {
       platform: this.googleComponent.name,
+      sessionData: this.getSessionData(context),
       oAuthToken: this.getOAuthToken(context),
       temporalAuthToken: this.getTemporalToken(context),
       device: this.getDevice(context),
@@ -75,7 +76,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   }
 
   /**
-   * get inital spokentext from context or delegate to apiai implementation
+   * Get inital spokentext from context or delegate to apiai implementation
    * @param context 
    */
   protected getSpokenText(context: RequestContext): string {
@@ -91,5 +92,17 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
 
     return super.getSpokenText(context);
+  }
+
+  /**
+   * Get session data from userStorage
+   * @param context 
+   */
+  private getSessionData(context: RequestContext): string | null {
+    if (typeof context.body.originalRequest.data !== "undefined" 
+        && typeof context.body.originalRequest.data.user !== "undefined"
+        && typeof context.body.originalRequest.data.user.userStorage !== "undefined") 
+      return context.body.originalRequest.data.user.userStorage
+    else return null;
   }
 }
