@@ -1,7 +1,7 @@
 import { RequestExtractor } from "assistant-source";
 import { ComponentDescriptor } from "inversify-components";
 import { Extractor } from "./extractor";
-import { GoogleHandler } from "./handle";
+import { GoogleHandler } from "./handler";
 import { COMPONENT_NAME, Configuration } from "./private-interfaces";
 
 export let descriptor: ComponentDescriptor<Configuration.Defaults> = {

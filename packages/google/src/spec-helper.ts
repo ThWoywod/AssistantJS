@@ -1,5 +1,5 @@
 import { intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
-import { GoogleHandler } from "./components/google/handle";
+import { GoogleHandler } from "./components/google/handler";
 import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
 export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes, GoogleSpecificHandable<GoogleSpecificTypes>> {
