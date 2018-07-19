@@ -1,3 +1,3 @@
 export * from "./components/google/public-interfaces";
 export { descriptor } from "./components/google/descriptor";
-export { SpecHelper } from "./spec-helper";
+export { GoogleSpecHelper as SpecHelper } from "./spec-helper";

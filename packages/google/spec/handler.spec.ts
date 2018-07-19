@@ -1,24 +1,33 @@
-import { SpecHelper } from "../src/spec-helper";
+import { SpecHelper } from "assistant-source";
+import { GoogleSpecificHandable, GoogleSpecificTypes } from "../src/assistant-google";
+import { GoogleSpecHelper } from "../src/spec-helper";
+
+interface CurrentThisContext {
+  specHelper: SpecHelper;
+  googleSpecHelper: GoogleSpecHelper;
+  handler: GoogleSpecificHandable<GoogleSpecificTypes>;
+  results: Partial<GoogleSpecificTypes>;
+}
 
 describe("Handler", function() {
-  let apiaiHelper: SpecHelper;
-
-  beforeEach(function() {
-    apiaiHelper = new SpecHelper(this.specHelper);
-  })
-
-  it("is correctly linked to spec setup", function() {
-    return apiaiHelper.pretendIntentCalled("test").then(handler => {
-      expect(handler.endSession).toBeTruthy();
-      expect(handler.voiceMessage).toBe("Hello from google!");
-    });
+  beforeEach(async function(this: CurrentThisContext) {
+    this.googleSpecHelper = new GoogleSpecHelper(this.specHelper);
+    this.handler = await this.googleSpecHelper.pretendIntentCalled("test");
+    this.results = this.specHelper.getResponseResults();
   });
 
-  it("cannot be executed twice", function() {
-    return apiaiHelper.pretendIntentCalled("test").then(handler => {
-      expect(function() {
-        handler.sendResponse();
-      }).toThrow();
-    });
+  it("is correctly linked to spec setup", function(this: CurrentThisContext) {
+    expect(this.results.shouldSessionEnd).toBeTruthy();
+    expect(this.results.voiceMessage).toBeTruthy();
+    expect(this.results.voiceMessage!.text).toBe("Hello from google!");
+  });
+
+  it("cannot be executed twice", async function(this: CurrentThisContext) {
+    try {
+      await this.handler.send();
+      fail("should throw error");
+    } catch (e) {
+      expect(true).toBe(true);
+    }
   });
 });

@@ -1,62 +1,59 @@
-import { OptionalHandlerFeatures, OptionalExtractions } from "assistant-source";
-import { Extraction as ApiAiExtraction, HandlerInterface as ApiAiHandler } from "assistant-apiai";
+import { ApiAISpecificHandable, ApiAiSpecificTypes, ExtractionInterface as ApiAiExtraction } from "assistant-apiai";
+import { OptionalExtractions } from "assistant-source";
 import { Configuration } from "./private-interfaces";
 
 /** Configuration of google component */
-export interface GoogleConfiguration extends Partial<Configuration.Defaults>, Configuration.Required {};
+export interface GoogleConfiguration extends Partial<Configuration.Defaults>, Configuration.Required {}
 
 /** Property describing the configuration of the google component */
 export interface GoogleConfigurationAttribute {
-  "google"?: GoogleConfiguration;
+  google?: GoogleConfiguration;
 }
 
 /** Possible devices this extractor can return */
-export type Device = 'phone' | 'speaker';
+export type Device = "phone" | "speaker";
 
-export interface Extraction extends 
-  ApiAiExtraction,
-  OptionalExtractions.SessionData,
-  OptionalExtractions.Device,
-  OptionalExtractions.TemporalAuth,
-  OptionalExtractions.OAuth {}
+export interface Extraction
+  extends ApiAiExtraction,
+    OptionalExtractions.SessionData,
+    OptionalExtractions.Device,
+    OptionalExtractions.TemporalAuth,
+    OptionalExtractions.OAuth {}
 
-export interface HandlerInterface extends
-  ApiAiHandler,
-  OptionalHandlerFeatures.SSML,
-  OptionalHandlerFeatures.Reprompt,
-  OptionalHandlerFeatures.GUI.Card.Simple,
-  OptionalHandlerFeatures.GUI.Card.Image,
-  OptionalHandlerFeatures.GUI.SuggestionChips,
-  OptionalHandlerFeatures.GUI.ChatBubbles,
-  OptionalHandlerFeatures.SessionData,
-  OptionalHandlerFeatures.Authentication {
-    getBody(): {
-      speech?: string;
-      displayText?: string;
-      data: {
-        google: GoogleWebhook.Response;
-      }
-    }
-  }
+/**
+ * Add custom types here
+ */
+export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
+  card: {
+    title: string;
+    description: string;
+    cardImage: string;
+    cardAccessibilityText?: string;
+  };
+}
+
+/**
+ * Add custom methods for here
+ */
+export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends ApiAISpecificHandable<CustomTypes> {}
 
 /** SIGN IN / AUTH TOKEN */
 
 export namespace GoogleWebhook {
-
   /** Webhook Response interface, extracted from official API */
   export namespace Response {
     export interface Rich {
-      /** 
+      /**
        * A list of UI elements which compose the response.
-       *  The items must meet the following requirements: 
-       * 1. The first item must be a google.actions.v2.SimpleResponse 
-       * 2. At most two google.actions.v2.SimpleResponse 
-       * 3. At most one card (e.g. google.actions.v2.ui_elements.BasicCard or google.actions.v2.StructuredResponse or google.actions.v2.MediaResponse 
-       * 4. Cards may not be used if an actions.intent.OPTION intent is used ie google.actions.v2.ui_elements.ListSelect or google.actions.v2.ui_elements.CarouselSelect 
-       * 
+       *  The items must meet the following requirements:
+       * 1. The first item must be a google.actions.v2.SimpleResponse
+       * 2. At most two google.actions.v2.SimpleResponse
+       * 3. At most one card (e.g. google.actions.v2.ui_elements.BasicCard or google.actions.v2.StructuredResponse or google.actions.v2.MediaResponse
+       * 4. Cards may not be used if an actions.intent.OPTION intent is used ie google.actions.v2.ui_elements.ListSelect or google.actions.v2.ui_elements.CarouselSelect
+       *
        * "responseType", the object's key, can only be one of the following: "simpleResponse"|"basicCard"|"structuredResponse"
-      */
-      items: { [responseType: string]: (Simple|Card.Basic) }[];
+       */
+      items: Array<{ [responseType: string]: Simple | Card.Basic }>;
 
       /** A list of suggested replies. These will always appear at the end of the response. */
       suggestions?: SuggestionChip[];
@@ -80,19 +77,19 @@ export namespace GoogleWebhook {
       ssml?: string;
 
       /** Optional text to display in the chat bubble. If not given, a display rendering of the textToSpeech or ssml above will be used. Limited to 640 chars. */
-      displayText?: string; 
+      displayText?: string;
     }
 
     /** A suggestion chip that the user can tap to quickly post a reply to the conversation. */
     export interface SuggestionChip {
-      /** The text shown the in the suggestion chip. 
-       * When tapped, this text will be posted back to the conversation verbatim as if the user had typed it. 
-       * Each title must be unique among the set of suggestion chips. 
+      /** The text shown the in the suggestion chip.
+       * When tapped, this text will be posted back to the conversation verbatim as if the user had typed it.
+       * Each title must be unique among the set of suggestion chips.
        * Max 25 chars. Required.
-      */
+       */
       title: string;
     }
-    
+
     /** Creates a suggestion chip that allows the user to jump out to the App or Website associated with this agent. */
     export interface LinkOutSuggestion {
       /** The name of the app or site this chip is linking to. The chip will be rendered with the title "Open ". Max 20 chars. Required. */
@@ -108,7 +105,7 @@ export namespace GoogleWebhook {
         title?: string;
 
         /** Optional subtitle */
-        subtitle?: string
+        subtitle?: string;
 
         /** Body text of the card. Supports a limited set of markdown syntax for formatting. Required, unless image is present. */
         formattedText?: string;
@@ -142,7 +139,7 @@ export namespace GoogleWebhook {
         openUrlAction: {
           /** http or https scheme url. Required. */
           url: string;
-        }
+        };
       }
     }
   }
@@ -153,16 +150,16 @@ export namespace GoogleWebhook {
 
     /** Shall we end the session after emitting this response? */
     expectUserResponse: boolean;
-  
+
     /** Is SSML used? */
     isSsml: boolean;
-  
+
     /** Used if we are not using finalResponse or richResponse. Contains the text to speak */
     speech?: string;
-  
+
     /** Used if you are using a response containing additional things like suggestions and cards */
     richResponse?: Response.Rich;
-  
+
     /** Used if you are sending the final response */
     finalResponse?: Response.Final;
 
