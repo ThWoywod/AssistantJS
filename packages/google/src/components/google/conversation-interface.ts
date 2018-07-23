@@ -297,7 +297,7 @@ export interface DateTime {
   };
 }
 
-export interface ResponseBody {
+export interface ResponseBodyPayload {
   /** An opaque token that is recirculated to the app every conversation turn. */
   conversationToken?: string;
   /**
