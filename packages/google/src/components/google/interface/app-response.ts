@@ -1,10 +1,4 @@
-export type Permission = "UNSPECIFIED_PERMISSION" | "NAME" | "DEVICE_PRECISE_LOCATION" | "DEVICE_COARSE_LOCATION" | "UPDATE";
-
-export type SkuType = "TYPE_UNSPECIFIED" | "IN_APP" | "SUBSCRIPTION" | "APP";
-
-export type ConversationType = "TYPE_UNSPECIFIED" | "NEW" | "ACTIVE";
-
-export type InputType = "UNSPECIFIED_INPUT_TYPE" | "TOUCH" | "VOICE" | "KEYBOARD";
+import { Argument } from "./common";
 
 export type OpenUrlActionUrlTypeHint = "URL_TYPE_HINT_UNSPECIFIED" | "AMP_CONTENT";
 
@@ -33,271 +27,22 @@ export type ActionType =
   | "FIX_ISSUE";
 
 /**
- * The request includes Actions on Google-specific information
+ * AppResponse is the response for the HTTP API call from the Assistant to the app.
+ * The response to AppRequest must occur within 5 seconds of the app receiving a request.
  * @example
  * {
- * "user": object,
- * "device": object,
- * "surface": object,
- * "conversation": object,
- * "inputs": object[],
- * "isInSandbox": boolean,
- * "availableSurfaces": object[]
+ * "conversationToken": string,
+ * "userStorage": string,
+ * "resetUserStorage": boolean,
+ * "expectUserResponse": boolean,
+ * "expectedInputs": [object],
+ * "finalResponse": object
+ * "customPushMessage": object
+ * "isInSandbox": boolean
  * }
  */
-export interface RequestBody {
-  /** User who initiated the conversation. */
-  user?: User;
-  /** Information about the device the user is using to interact with the app. */
-  device?: Device;
-  /** Information about the surface the user is interacting with, e.g. whether it can output audio or has a screen. */
-  surface?: Surface;
-  /** Holds session data like the conversation ID and conversation token. */
-  conversation?: Conversation;
-  /**
-   * List of inputs corresponding to the expected inputs specified by the app.
-   * For the initial conversation trigger, the input contains information on how the user triggered the conversation.
-   */
-  inputs?: Input[];
-  /** Indicates whether the request should be handled in sandbox mode. */
-  isInSandbox?: boolean;
-  /** Surfaces available for cross surface handoff. */
-  availableSurfaces?: Surface[];
-}
 
-export interface User {
-  /**
-   * Token representing the user's identity.
-   * This is a Json web token including encoded profile.
-   * The definition is at https://developers.google.com/identity/protocols/OpenIDConnect#obtainuserinfo.
-   */
-  idToken?: string;
-  /** Information about the end user. Some fields are only available if the user has given permission to provide this information to the app. */
-  profile?: UserProfile;
-  /**
-   * An OAuth2 token that identifies the user in your system.
-   * Only available if [Account Linking][google.actions.v2.AccountLinking] configuration is defined in the action package and the user links their account.
-   */
-  accessToken?: string;
-  /** Contains permissions granted by user to this app. */
-  permission?: Permission[];
-  /** Primary locale setting of the user making the request. Follows IETF BCP-47 language code  */
-  locale?: string;
-  /** The timestamp of the last interaction with this user. This field will be omitted if the user has not interacted with the agent before. */
-  lastSeen?: string;
-  /** An opaque token supplied by the application that is persisted across conversations for a particular user. The maximum size of the string is 10k characters. */
-  userStorage?: string;
-  /** List of user entitlements for every package name listed in action package, if any. */
-  packageEntitlements?: PackageEntitlement[];
-}
-
-export interface UserProfile {
-  /** The user's full name as specified in their Google account. Requires the NAME permission. */
-  displayName?: string;
-  /** The user's first name as specified in their Google account. Requires the NAME permission. */
-  givenName?: string;
-  /** The user's last name as specified in their Google account. Note that this field could be empty. Requires the NAME permission. */
-  familyName?: string;
-}
-
-export interface PackageEntitlement {
-  /** Should match the package name in action package */
-  packageName?: string;
-  /** List of entitlements for a given app */
-  entitlements?: Entitlement[];
-}
-
-export interface Entitlement {
-  /** Product sku. Package name for paid app, suffix of Finsky docid for in-app purchase and in-app subscription. Match getSku() in Play InApp Billing API. */
-  sku?: string;
-  /** The type of SKU, like "inapp" or "subs", or "app". */
-  skuType?: SkuType;
-  /** Only present for in-app purchase and in-app subs. */
-  inAppDetails?: SignedData;
-}
-
-export interface SignedData {
-  /**
-   * Match INAPP_PURCHASE_DATA from getPurchases() method.
-   * Contains all inapp purchase data in JSON format
-   * See details in table 6 of https://developer.android.com/google/play/billing/billing_reference.html.
-   */
-  inAppPurchaseData?: {
-    [key: string]: any;
-  };
-  /** Matches IN_APP_DATA_SIGNATURE from getPurchases() method in Play InApp Billing API. */
-  inAppDataSignature?: string;
-}
-
-export interface Device {
-  /** Represents actual device location such as lat, lng, and formatted address. Requires the DEVICE_COARSE_LOCATION or DEVICE_PRECISE_LOCATION permission. */
-  location?: Location;
-}
-
-export interface Location {
-  /** Geo coordinates. Requires the DEVICE_PRECISE_LOCATION permission. */
-  coordinates?: LatLng;
-  /** Display address, e.g., "1600 Amphitheatre Pkwy, Mountain View, CA 94043". Requires the DEVICE_PRECISE_LOCATION permission. */
-  formattedAddress?: string;
-  /** Zip code. Requires the DEVICE_PRECISE_LOCATION or DEVICE_COARSE_LOCATION permission. */
-  zipCode?: string;
-  /** City. Requires the DEVICE_PRECISE_LOCATION or DEVICE_COARSE_LOCATION permission. */
-  city?: string;
-  /** Postal address. Requires the DEVICE_PRECISE_LOCATION or DEVICE_COARSE_LOCATION permission. */
-  postalAddress?: PostalAddress;
-  /** Name of the place */
-  name?: string;
-  /** Phone number of the location, e.g. contact number of business location or phone number for delivery location. */
-  phoneNumber?: string;
-  /** Notes about the location */
-  notes?: string;
-  /** ṔlaceId is used with Places API to fetch details of a place. See https://developers.google.com/places/web-service/place-id */
-  placeId?: string;
-}
-
-export interface LatLng {
-  /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
-  latitude?: number;
-  /** The longitude in degrees. It must be in the range [-180.0, +180.0]. */
-  longitude?: number;
-}
-
-export interface PostalAddress {
-  /** The schema revision of the PostalAddress. This must be set to 0, which is the latest revision. All new revisions must be backward compatible with old revisions. */
-  revision?: number;
-  /** Required. CLDR region code of the country/region of the address. This is never inferred and it is up to the user to ensure the value is correct. */
-  regionCode: string;
-  /**
-   * Optional. BCP-47 language code of the contents of this address (if known).
-   * This is often the UI language of the input form or is expected to match one of the languages used in the address' country/region, or their transliterated equivalents
-   */
-  languageCode?: string;
-  /** Optional. Postal code of the address */
-  postalCode?: string;
-  /** Optional. Additional, country-specific, sorting code. */
-  sortingCode?: string;
-  /** Optional. Highest administrative subdivision which is used for postal addresses of a country or region. */
-  administrativeArea?: string;
-  /** Optional. Generally refers to the city/town portion of the address */
-  locality?: string;
-  /** Optional. Sublocality of the address. For example, this can be neighborhoods, boroughs, districts. */
-  sublocality?: string;
-  /**
-   * Unstructured address lines describing the lower levels of an address.
-   * For more information see: https://developers.google.com/actions/reference/rest/Shared.Types/PostalAddress
-   */
-  addressLines?: string[];
-  /** Optional. The recipient at the address. This field may, under certain circumstances, contain multiline information. For example, it might contain "care of" information. */
-  recipients?: string[];
-  /** Optional. The name of the organization at the address. */
-  organization?: string;
-}
-
-export interface Surface {
-  /** A list of capabilities the surface supports at the time of the request e.g. actions.capability.AUDIO_OUTPUT */
-  capabilities?: Capability[];
-}
-
-export interface Capability {
-  /** The name of the capability, e.g. actions.capability.AUDIO_OUTPUT */
-  name?: string;
-}
-
-export interface Conversation {
-  /** Unique ID for the multi-turn conversation. It's assigned for the first turn. After that it remains the same for subsequent conversation turns until the conversation is terminated. */
-  conversationId?: string;
-  /** Type indicates the state of the conversation in its life cycle. */
-  type?: ConversationType;
-  /** Opaque token specified by the app in the last conversation turn. It can be used by an app to track the conversation or to store conversation related data */
-  conversationToken?: string;
-}
-
-export interface Input {
-  /**
-   * Raw input transcription from each turn of conversation that was used to provide this input.
-   * Multiple conversation turns that don't involve the app may be required for the assistant to provide some types of input.
-   */
-  rawInputs?: RawInput[];
-  /**
-   * Indicates the user's intent. For the first conversation turn, the intent will refer to the intent of the action that is being triggered.
-   * For subsequent conversation turns, the intent will be a built-in intent.
-   */
-  intent?: string;
-  /** A list of provided argument values for the input requested by the app. */
-  arguments?: Argument[];
-}
-
-export interface RawInput {
-  /** Indicates how the user provided this input: a typed response, a voice response, unspecified, etc. */
-  inputType?: InputType;
-  /**
-   * !! Union field input. The actual input value input can be only one of the following: !!
-   */
-  /** Typed or spoken input from the end user. */
-  query?: string;
-  /** The triggering URL. */
-  url?: string;
-}
-
-export interface Argument {
-  /** Name of the argument being provided for the input. */
-  name?: string;
-  /** The raw text, typed or spoken, that provided the value for the argument. */
-  rawText?: string;
-  /** Specified when query pattern includes a $org.schema.type.Text type or expected input has a built-in intent: actions.intent.TEXT, or actions.intent.OPTION. */
-  textValue?: string;
-  /**
-   * Specified when an error was encountered while computing the argument.
-   * For example, the built-in intent "actions.intent.PLACE" can return an error status if the user denied the permission to access their device location.
-   */
-  status?: Status;
-  /**
-   * !! Union field input. The actual input value input can be only one of the following: !!
-   */
-  /** Specified when query pattern includes a $org.schema.type.Number type or expected input has a built-in intent: "assistant.intent.action.NUMBER". */
-  intValue?: string; // int64 format
-  /** Specified for built-in intent: "actions.intent.NUMBER" */
-  floatValue?: number;
-  /** Specified when query pattern includes a $org.schema.type.YesNo type or expected input has a built-in intent: actions.intent.CONFIRMATION. */
-  boolValue?: boolean;
-  /** Specified for the built-in intent: actions.intent.DATETIME. */
-  datetimeValue?: DateTime;
-  /** Specified when query pattern includes a $org.schema.type.Location type or expected input has a built-in intent: "actions.intent.PLACE". */
-  placeValue?: Location;
-  /** Extension whose type depends on the argument */
-  extension?: any;
-  /** Specified when Google needs to pass data value in JSON format. */
-  structuredValue?: {
-    [key: string]: any;
-  };
-}
-
-export interface Status {
-  /** The status code, which should be an enum value of google.rpc.Code. */
-  code?: number;
-  /** A developer-facing error message, which should be in English. */
-  message?: string;
-  /** A list of messages that carry the error details. There is a common set of message types for APIs to use */
-  details?: any[];
-}
-
-export interface DateTime {
-  /** Represents a whole calendar date, e.g. date of birth */
-  date?: {
-    year: number;
-    month: number;
-    day: number;
-  };
-  /** Represents a time of day */
-  time?: {
-    hours: number;
-    minutes: number;
-    seconds: number;
-    nanos: number;
-  };
-}
-
-export interface ResponseBodyPayload {
+export interface AppResponse {
   /** An opaque token that is recirculated to the app every conversation turn. */
   conversationToken?: string;
   /**
@@ -358,10 +103,22 @@ export interface ExpectedIntent {
 }
 
 export interface InputPrompt {
+  /**
+   * Initial prompts asking user to provide an input. Only a single initial_prompt is supported.
+   * THIS ITEM IS DEPRECATED.
+   */
+  initialPrompts?: SpeechResponse;
   /** Prompt payload. */
   richInitialPrompt?: RichResponse;
   /** Prompt used to ask user when there is no input from user. */
   noInputPrompts?: SimpleResponse[];
+}
+
+export interface SpeechResponse {
+  /** Structured spoken response to the user in the SSML format */
+  ssml?: string;
+  /** Plain text of the speech output, e.g., "where do you want to go?"/ */
+  textToSpeech?: string;
 }
 
 export interface RichResponse {
