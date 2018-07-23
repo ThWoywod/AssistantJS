@@ -681,6 +681,11 @@ export interface LinkOutSuggestion {
 
 export interface CustomPushMessage {
   /** The specified target for the push request. */
+  target?: Target;
+  /** An order update updating orders placed through transaction APIs. */
+  orderUpdate?: OrderUpdate;
+  /** If specified, displays a notification to the user with specified title and text. */
+  userNotification?: UserNotification;
 }
 
 export interface Target {
