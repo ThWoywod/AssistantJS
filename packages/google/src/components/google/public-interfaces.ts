@@ -1,6 +1,6 @@
 import { ApiAISpecificHandable, ApiAiSpecificTypes, ExtractionInterface as ApiAiExtraction } from "assistant-apiai";
 import { OptionalExtractions } from "assistant-source";
-import { TableCard } from "./conversation-interface";
+import * as GoogleInterface from "./conversation-interface";
 import { Configuration } from "./private-interfaces";
 
 /** Configuration of google component */
@@ -25,7 +25,7 @@ export interface Extraction
  * Add custom types here
  */
 export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
-  googleTable: TableCard;
+  googleTable: GoogleInterface.TableCard;
   card: {
     title: string;
     subTitle?: string;
@@ -39,3 +39,5 @@ export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
  * Add custom methods for here
  */
 export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends ApiAISpecificHandable<CustomTypes> {}
+
+export { GoogleInterface };
