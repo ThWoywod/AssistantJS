@@ -64,6 +64,9 @@ export interface AppResponse {
   isInSandbox?: boolean;
 }
 
+/**
+ * List of inputs the app expects, each input can be a built-in intent, or an input taking list of possible intents. Only one input is supported for now.
+ */
 export interface ExpectedInput {
   /** The customized prompt used to ask user for input. */
   inputPrompt?: InputPrompt;
@@ -73,6 +76,9 @@ export interface ExpectedInput {
   speechBiasingHints?: string;
 }
 
+/**
+ * Intent that can be used to fulfill this input. To have the Google Assistant just return the raw user input, the app should ask for the actions.intent.TEXT intent.
+ */
 export interface ExpectedIntent {
   /**
    * The built-in intent name, e.g. actions.intent.TEXT, or intents defined in the action package.
@@ -102,6 +108,9 @@ export interface ExpectedIntent {
   parameterName?: string;
 }
 
+/**
+ * The customized prompt used to ask user for input.
+ */
 export interface InputPrompt {
   /**
    * Initial prompts asking user to provide an input. Only a single initial_prompt is supported.
@@ -121,6 +130,9 @@ export interface SpeechResponse {
   textToSpeech?: string;
 }
 
+/**
+ * A rich response that can include audio, text, cards, suggestions and structured data.
+ */
 export interface RichResponse {
   /**
    * A list of UI elements which compose the response
@@ -135,6 +147,9 @@ export interface RichResponse {
   linkOutSuggestion?: LinkOutSuggestion[];
 }
 
+/**
+ * Items like Voice and text-only response, basic- or table cards.
+ */
 export interface Item {
   /**
    * !! Union field input. The actual input value input can be only one of the following: !!
@@ -153,6 +168,9 @@ export interface Item {
   tableCard?: TableCard;
 }
 
+/**
+ * A simple response containing speech or text to show the user.
+ */
 export interface SimpleResponse {
   /** Plain text of the speech output, e.g., "where do you want to go?" Mutually exclusive with ssml. */
   textToSpeech?: string;
@@ -162,6 +180,9 @@ export interface SimpleResponse {
   displayText?: string;
 }
 
+/**
+ * A basic card for displaying some information, e.g. an image and/or text.
+ */
 export interface BasicCard {
   /** Overall title of the card. Optional. */
   title?: string;
@@ -177,6 +198,9 @@ export interface BasicCard {
   imageDisplayOptions?: ImageDisplayOptions;
 }
 
+/**
+ * An image displayed in the card. The height is fixed to 192dp.
+ */
 export interface Image {
   /** The source url of the image. Images can be JPG, PNG and GIF (animated and non-animated). Required */
   url: string;
@@ -188,6 +212,9 @@ export interface Image {
   width?: number;
 }
 
+/**
+ * A button object that usually appears at the bottom of a card.
+ */
 export interface Button {
   /** Title of the button. Required. */
   title?: string;
@@ -195,6 +222,9 @@ export interface Button {
   openUrlAction?: OpenUrlAction;
 }
 
+/**
+ * Action to take when a user taps on the button.
+ */
 export interface OpenUrlAction {
   /** The url field which could be any of: - http/https urls for opening an App-linked App or a webpage */
   url?: string;
@@ -204,6 +234,9 @@ export interface OpenUrlAction {
   urlTypeHint?: OpenUrlActionUrlTypeHint;
 }
 
+/**
+ * Specification of the Android App for fulfillment restrictions
+ */
 export interface AndroidApp {
   /** Package name Package name must be specified when specifing Android Fulfillment. */
   packageName?: string;
@@ -211,6 +244,9 @@ export interface AndroidApp {
   versions?: VersionFilter[];
 }
 
+/**
+ * VersionFilter should be included if specific version/s of the App are required.
+ */
 export interface VersionFilter {
   /** Min version code or 0, inclusive. */
   minVersion?: number;
@@ -218,11 +254,17 @@ export interface VersionFilter {
   maxVersion?: number;
 }
 
+/**
+ * The response defined for app to respond with structured data.
+ */
 export interface StructuredResponse {
   /** App provides an order update (e.g. Receipt) after receiving the order. */
   orderUpdate?: OrderUpdate;
 }
 
+/**
+ * Update to an order.
+ */
 export interface OrderUpdate {
   /** Id of the order is the Google-issued id. */
   googleOrderId?: string;
@@ -271,6 +313,9 @@ export interface OrderUpdate {
   };
 }
 
+/**
+ * Current order state.
+ */
 export interface OrderState {
   /**
    * State can be one of the following values:
@@ -294,6 +339,9 @@ export interface OrderState {
   label: string;
 }
 
+/**
+ * A follow-up action associated with the order update.
+ */
 export interface Action {
   /** Type of action. */
   type?: ActionType;
@@ -301,6 +349,9 @@ export interface Action {
   button?: Button;
 }
 
+/**
+ * Receipt when state is CONFIRMED or any other state (e.g. IN_TRANSIT, FULFILLED) inclusive of CONFIRMED state.
+ */
 export interface Receipt {
   /**
    * DEPRECEATED
@@ -312,6 +363,9 @@ export interface Receipt {
   userVisibleOrderId?: string;
 }
 
+/**
+ * Price in order.
+ */
 export interface Price {
   /** Type of Price. Required */
   type: PriceType;
@@ -319,6 +373,9 @@ export interface Price {
   amount: Money;
 }
 
+/**
+ * Represents an amount of money with its currency type.
+ */
 export interface Money {
   /** The 3-letter currency code defined in ISO 4217. */
   currencyCode: string;
@@ -328,6 +385,9 @@ export interface Money {
   nanos: number;
 }
 
+/**
+ * Updates for individual line items. At least one of orderState or price should be specified.
+ */
 export interface LineItemUpdate {
   /** New line item-level state. */
   orderState?: OrderState;
@@ -341,6 +401,9 @@ export interface LineItemUpdate {
   };
 }
 
+/**
+ * Optional user notification to display as part of the Order update.
+ */
 export interface UserNotification {
   /** The title for the user notification. */
   title?: string;
@@ -348,6 +411,9 @@ export interface UserNotification {
   text?: string;
 }
 
+/**
+ * The rejection info when state is REJECTED. This message can be populated in the initial order update in conversation or through subsequent async order update.
+ */
 export interface RejectionInfo {
   /** Rejection type. */
   type?: ReasonType;
@@ -355,6 +421,9 @@ export interface RejectionInfo {
   reason?: string;
 }
 
+/**
+ * The response indicating a set of media to be played within the conversation.
+ */
 export interface MediaResponse {
   /** Type of the media within this response. */
   mediaType?: MediaType;
@@ -362,6 +431,9 @@ export interface MediaResponse {
   mediaObjects?: MediaObject[];
 }
 
+/**
+ * Represents one media object which is returned with MediaResponse. Contains information about the media, such as name, description, url, etc.
+ */
 export interface MediaObject {
   /** Name of this media object. */
   name?: string;
@@ -378,6 +450,9 @@ export interface MediaObject {
   icon?: Image;
 }
 
+/**
+ * Presents a set of AMP documents as a carousel of large-tile items. Items may be selected to launch their associated AMP document in an AMP viewer.
+ */
 export interface CarouselBrowse {
   /** Min: 2. Max: 10. */
   item?: CarouselItem[];
@@ -385,6 +460,9 @@ export interface CarouselBrowse {
   imageDisplayOptions?: ImageDisplayOptions;
 }
 
+/**
+ * Item in the carousel.
+ */
 export interface CarouselItem {
   /** Title of the carousel item. Required. */
   title: string;
@@ -398,6 +476,9 @@ export interface CarouselItem {
   openUrlAction: OpenUrlAction;
 }
 
+/**
+ * A table card for displaying a table of text.
+ */
 export interface TableCard {
   /** Overall title of the table. Optional but must be set if subtitle is set. */
   title?: string;
@@ -413,6 +494,9 @@ export interface TableCard {
   buttons?: Button[];
 }
 
+/**
+ * Keeps properties of columns (including headers).
+ */
 export interface ColumnProperties {
   /** Header text for the column. */
   header?: string;
@@ -420,6 +504,9 @@ export interface ColumnProperties {
   horizontalAlignment?: HorizontalAlignment;
 }
 
+/**
+ * Describes a row in the table.
+ */
 export interface Row {
   /** Text content of the cell. */
   cells: Array<{
@@ -429,6 +516,9 @@ export interface Row {
   dividerAfter?: boolean;
 }
 
+/**
+ * Creates a suggestion chip that allows the user to jump out to the App or Website associated with this agent.
+ */
 export interface LinkOutSuggestion {
   /** The name of the app or site this chip is linking to. The chip will be rendered with the title "Open ". Max 20 chars. Required. */
   destinationName: string;
@@ -436,6 +526,9 @@ export interface LinkOutSuggestion {
   openUrlAction?: OpenUrlAction;
 }
 
+/**
+ * A custom push message that holds structured data to push for the Actions Fulfillment API.
+ */
 export interface CustomPushMessage {
   /** The specified target for the push request. */
   target?: Target;
@@ -445,6 +538,9 @@ export interface CustomPushMessage {
   userNotification?: UserNotification;
 }
 
+/**
+ * The specified target for the push request.
+ */
 export interface Target {
   /** The user to target. */
   userId?: string;

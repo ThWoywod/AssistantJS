@@ -1,11 +1,23 @@
 import { Argument } from "./common";
 
+/**
+ * Possible values for permission.
+ */
 export type Permission = "UNSPECIFIED_PERMISSION" | "NAME" | "DEVICE_PRECISE_LOCATION" | "DEVICE_COARSE_LOCATION" | "UPDATE";
 
+/**
+ * The type of SKU, like "inapp" or "subs", or "app".
+ */
 export type SkuType = "TYPE_UNSPECIFIED" | "IN_APP" | "SUBSCRIPTION" | "APP";
 
+/**
+ * Type indicates the state of the conversation in its life cycle.
+ */
 export type ConversationType = "TYPE_UNSPECIFIED" | "NEW" | "ACTIVE";
 
+/**
+ * Indicates the input source, typed query or voice query.
+ */
 export type InputType = "UNSPECIFIED_INPUT_TYPE" | "TOUCH" | "VOICE" | "KEYBOARD";
 
 /**
@@ -41,6 +53,9 @@ export interface AppRequest {
   availableSurfaces?: Surface[];
 }
 
+/**
+ * User, who initiated the conversation
+ */
 export interface User {
   /**
    * Token representing the user's identity.
@@ -67,6 +82,9 @@ export interface User {
   packageEntitlements?: PackageEntitlement[];
 }
 
+/**
+ * Contains the user's personal info. Fields are only populated if the user user grants the permission to the app for a particular field.
+ */
 export interface UserProfile {
   /** The user's full name as specified in their Google account. Requires the NAME permission. */
   displayName?: string;
@@ -76,6 +94,9 @@ export interface UserProfile {
   familyName?: string;
 }
 
+/**
+ * List of entitlements related to a package name
+ */
 export interface PackageEntitlement {
   /** Should match the package name in action package */
   packageName?: string;
@@ -83,6 +104,9 @@ export interface PackageEntitlement {
   entitlements?: Entitlement[];
 }
 
+/**
+ * Defines a user's digital entitlement. Types of possible entitlements: paid-app,in-app purchases, in-app subscriptions.
+ */
 export interface Entitlement {
   /** Product sku. Package name for paid app, suffix of Finsky docid for in-app purchase and in-app subscription. Match getSku() in Play InApp Billing API. */
   sku?: string;
@@ -92,6 +116,9 @@ export interface Entitlement {
   inAppDetails?: SignedData;
 }
 
+/**
+ * Contains all inapp purchase data in JSON format
+ */
 export interface SignedData {
   /**
    * Match INAPP_PURCHASE_DATA from getPurchases() method.
@@ -105,21 +132,34 @@ export interface SignedData {
   inAppDataSignature?: string;
 }
 
+/**
+ * Information about the device the user is using to interact with the Google Assistant.
+ */
 export interface Device {
   /** Represents actual device location such as lat, lng, and formatted address. Requires the DEVICE_COARSE_LOCATION or DEVICE_PRECISE_LOCATION permission. */
   location?: Location;
 }
 
+/**
+ * Information specific to the Google Assistant client surface the user is interacting with.
+ * Surface is distinguished from Device by the fact that multiple Assistant surfaces may live on the same device.
+ */
 export interface Surface {
   /** A list of capabilities the surface supports at the time of the request e.g. actions.capability.AUDIO_OUTPUT */
   capabilities?: Capability[];
 }
 
+/**
+ * Represents a unit of functionality that the surface is capable of supporting.
+ */
 export interface Capability {
   /** The name of the capability, e.g. actions.capability.AUDIO_OUTPUT */
   name?: string;
 }
 
+/**
+ * Represents a conversation
+ */
 export interface Conversation {
   /** Unique ID for the multi-turn conversation. It's assigned for the first turn. After that it remains the same for subsequent conversation turns until the conversation is terminated. */
   conversationId?: string;
@@ -129,6 +169,9 @@ export interface Conversation {
   conversationToken?: string;
 }
 
+/**
+ * List of inputs corresponding to the expected inputs specified by the app.
+ */
 export interface Input {
   /**
    * Raw input transcription from each turn of conversation that was used to provide this input.
@@ -144,6 +187,9 @@ export interface Input {
   arguments?: Argument[];
 }
 
+/**
+ * Raw input transcription from each turn of conversation that was used to provide this input.
+ */
 export interface RawInput {
   /** Indicates how the user provided this input: a typed response, a voice response, unspecified, etc. */
   inputType?: InputType;

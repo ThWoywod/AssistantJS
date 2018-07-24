@@ -1,3 +1,6 @@
+/**
+ * /** A list of provided argument values for the input requested by the app.
+ */
 export interface Argument {
   /** Name of the argument being provided for the input. */
   name?: string;
@@ -31,6 +34,9 @@ export interface Argument {
   };
 }
 
+/**
+ * The Status type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs
+ */
 export interface Status {
   /** The status code, which should be an enum value of google.rpc.Code. */
   code?: number;
@@ -40,6 +46,9 @@ export interface Status {
   details?: any[];
 }
 
+/**
+ * Date and time argument value parsed from user input. Does not include time zone information.
+ */
 export interface DateTime {
   /** Represents a whole calendar date, e.g. date of birth */
   date?: {
@@ -56,6 +65,9 @@ export interface DateTime {
   };
 }
 
+/**
+ * Container that represents a location.
+ */
 export interface Location {
   /** Geo coordinates. Requires the DEVICE_PRECISE_LOCATION permission. */
   coordinates?: LatLng;
@@ -77,6 +89,10 @@ export interface Location {
   placeId?: string;
 }
 
+/**
+ * An object representing a latitude/longitude pair. This is expressed as a pair of doubles representing degrees latitude and degrees longitude.
+ * Unless specified otherwise, this must conform to the WGS84 standard. Values must be within normalized ranges.
+ */
 export interface LatLng {
   /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
   latitude?: number;
@@ -84,6 +100,10 @@ export interface LatLng {
   longitude?: number;
 }
 
+/**
+ * Represents a postal address, e.g. for postal delivery or payments addresses. Given a postal address, a postal service can deliver items to a premise, P.O. Box or similar.
+ * It is not intended to model geographical locations (roads, towns, mountains).
+ */
 export interface PostalAddress {
   /** The schema revision of the PostalAddress. This must be set to 0, which is the latest revision. All new revisions must be backward compatible with old revisions. */
   revision?: number;
