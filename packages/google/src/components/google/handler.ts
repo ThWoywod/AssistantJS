@@ -71,31 +71,11 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
     return true;
   }
 
-  private fillPrompt(results: Partial<CustomTypes>, payload: Partial<GoogleInterface.AppResponse>): Partial<GoogleInterface.AppResponse> {
-    let currentPayload = payload;
-
-    if (results.voiceMessage) {
-      if (results.voiceMessage) {
-        if (!results.shouldSessionEnd) {
-          const expectedInput = this.createExpectedInput();
-
-          expectedInput.inputPrompt!.richInitialPrompt!.items!.push({ simpleResponse: this.createSimpleResponse(results.voiceMessage) });
-
-          if (this.createExpectedInputs(currentPayload)) {
-            currentPayload.expectedInputs.push(expectedInput);
-          }
-        } else {
-          currentPayload = this.fillEndSession(results.voiceMessage, currentPayload);
-        }
-      }
-    }
-
-    return currentPayload;
-  }
-
-  private fillEndSession(voiceMessage: CustomTypes["voiceMessage"], payload: Partial<GoogleInterface.AppResponse>): Partial<GoogleInterface.AppResponse> {
+  private fillEndSession(payload: Partial<GoogleInterface.AppResponse>, voiceMessage?: CustomTypes["voiceMessage"]): Partial<GoogleInterface.AppResponse> {
     payload.finalResponse = this.createRichResponse();
-    payload.finalResponse.items!.push({ simpleResponse: this.createSimpleResponse(voiceMessage) });
+    if (voiceMessage) {
+      payload.finalResponse.items!.push({ simpleResponse: this.createSimpleResponse(voiceMessage) });
+    }
 
     return payload;
   }
@@ -138,18 +118,69 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
     return payload;
   }
 
+  private fillPrompt(results: Partial<CustomTypes>, payload: Partial<GoogleInterface.AppResponse>): Partial<GoogleInterface.AppResponse> {
+    const currentPayload = payload;
+
+    // Check wether the session should end
+    if (results.shouldSessionEnd) {
+      if (!results.voiceMessage) {
+        return this.fillEndSession(currentPayload);
+      }
+
+      return this.fillEndSession(currentPayload, results.voiceMessage);
+    }
+
+    const expectedInput = this.createExpectedInput();
+
+    if (results.voiceMessage) {
+      // first chatbubble is for voiceMessage
+      if (results.chatBubbles && results.chatBubbles.length > 0) {
+        results.chatBubbles.forEach((value, index) => {
+          let currentItem: GoogleInterface.Item;
+
+          currentItem =
+            index === 0
+              ? { simpleResponse: this.createSimpleResponse(results.voiceMessage!, value) }
+              : (currentItem = { simpleResponse: this.createSimpleResponse(value) });
+
+          expectedInput.inputPrompt!.richInitialPrompt!.items!.push(currentItem);
+        });
+      } else {
+        const currentItem = { simpleResponse: this.createSimpleResponse(results.voiceMessage) };
+        expectedInput.inputPrompt!.richInitialPrompt!.items!.push(currentItem);
+      }
+    } else if (results.chatBubbles && results.chatBubbles.length > 0) {
+      results.chatBubbles.forEach((value, index) => {
+        let currentItem: GoogleInterface.Item;
+
+        currentItem = currentItem = { simpleResponse: this.createSimpleResponse(value) };
+
+        expectedInput.inputPrompt!.richInitialPrompt!.items!.push(currentItem);
+      });
+    }
+
+    if (this.createExpectedInputs(currentPayload)) {
+      currentPayload.expectedInputs.push(expectedInput);
+    }
+
+    return currentPayload;
+  }
+
   private fillChatBubbles(results: Partial<CustomTypes>, payload: Partial<GoogleInterface.AppResponse>): Partial<GoogleInterface.AppResponse> {
     if (results.chatBubbles) {
       if (this.createExpectedInputs(payload)) {
-        payload.expectedInputs.forEach((expectedInput: GoogleInterface.ExpectedInput) => {
-          if (expectedInput.inputPrompt && expectedInput.inputPrompt.richInitialPrompt && expectedInput.inputPrompt.richInitialPrompt.items) {
-            expectedInput.inputPrompt.richInitialPrompt.items.forEach((item: GoogleInterface.Item) => {
-              if (this.isSimpleResponse(item)) {
-                item.simpleResponse.displayText = results.chatBubbles![0];
-              }
-            });
-          }
-        });
+        if (
+          payload.expectedInputs[0] &&
+          payload.expectedInputs[0].inputPrompt &&
+          payload.expectedInputs[0].inputPrompt!.richInitialPrompt &&
+          payload.expectedInputs[0].inputPrompt!.richInitialPrompt!.items
+        ) {
+          payload.expectedInputs[0].inputPrompt!.richInitialPrompt!.items!.forEach((item: GoogleInterface.Item) => {
+            if (this.isSimpleResponse(item)) {
+              item.simpleResponse.displayText = results.chatBubbles![0];
+            }
+          });
+        }
       }
     }
 
@@ -179,7 +210,19 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
   }
 
   private fillSuggestionChips(results: Partial<CustomTypes>, payload: Partial<GoogleInterface.AppResponse>): Partial<GoogleInterface.AppResponse> {
-    throw new Error();
+    if (results.suggestionChips) {
+      if (this.createExpectedInputs(payload)) {
+        if (payload.expectedInputs[0].inputPrompt && payload.expectedInputs[0].inputPrompt!.richInitialPrompt) {
+          payload.expectedInputs[0].inputPrompt!.richInitialPrompt!.suggestions = results.suggestionChips.map(chip => {
+            return {
+              title: chip.displayText,
+            };
+          });
+        }
+      }
+    }
+
+    return payload;
   }
 
   private createRichResponse(): GoogleInterface.RichResponse {
@@ -189,14 +232,27 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
     };
   }
 
-  private createSimpleResponse(voiceMessage: CustomTypes["voiceMessage"]): GoogleInterface.SimpleResponse {
-    return voiceMessage.isSSML
-      ? {
-          ssml: voiceMessage.text,
-        }
-      : {
-          textToSpeech: voiceMessage.text,
-        };
+  private createSimpleResponse(voiceMessage: CustomTypes["voiceMessage"] | string, displayText?: string): GoogleInterface.SimpleResponse {
+    let result: GoogleInterface.SimpleResponse;
+    if (typeof voiceMessage !== "string") {
+      result = voiceMessage.isSSML
+        ? {
+            ssml: voiceMessage.text,
+          }
+        : {
+            textToSpeech: voiceMessage.text,
+          };
+    } else {
+      result = {
+        textToSpeech: voiceMessage,
+      };
+    }
+
+    if (displayText) {
+      result.displayText = displayText;
+    }
+
+    return result;
   }
 
   private isSimpleResponse(item: GoogleInterface.Item): item is { simpleResponse: GoogleInterface.SimpleResponse } {
