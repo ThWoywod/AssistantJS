@@ -6,7 +6,16 @@ import { descriptor as googleDescriptor } from "assistant-google";
 /** and below, in your "initializeSetups" method: */
 assistantJs.registerComponent(googleDescriptor);
 ```
-And that's it! Your AssistantJS voice application is now ready for Google Assistant. There is no configuration needed!
+
+After that add the GoogleTypes and the Google-Handler to your handler-config.ts. Replace or remove `ADD_OTHER_TYPES_HERE` and `ADD_OTHER_HANDLER_HERE<CurrentAnswerTypes>` if needed.
+```typescript
+import { GoogleTypes, GoogleHandler} from "assistant-google";
+
+export type CurrentAnswerTypes = GoogleTypes & ADD_OTHER_TYPES_HERE;
+export type CurrentHandler =  GoogleHandler<CurrentAnswerTypes> & ADD_OTHER_HANDLER_HERE<CurrentAnswerTypes>;
+```
+
+And that's it! Your AssistantJS voice application is now ready for Google Assistant. There is no more configuration needed!
 
 #### Debugging OAuth
 If you start your AssistantJS server with `FORCED_GOOGLE_OAUTH_TOKEN="mytoken"`, all google assistant requests will return "mytoken" as OAuth token. 

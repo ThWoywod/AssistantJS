@@ -41,7 +41,6 @@ export type ActionType =
  * "isInSandbox": boolean
  * }
  */
-
 export interface AppResponse {
   /** An opaque token that is recirculated to the app every conversation turn. */
   conversationToken?: string;
