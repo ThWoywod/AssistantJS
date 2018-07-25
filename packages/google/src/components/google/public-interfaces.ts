@@ -1,5 +1,11 @@
-import { ApiAISpecificHandable, ApiAiSpecificTypes, ExtractionInterface as ApiAiExtraction } from "assistant-apiai";
-import { OptionalExtractions } from "assistant-source";
+import {
+  ApiAISpecificHandable,
+  ApiAiSpecificTypes,
+  DialogflowInterface,
+  DialogflowRequestContext,
+  ExtractionInterface as ApiAiExtraction,
+} from "assistant-apiai";
+import { OptionalExtractions, RequestContext } from "assistant-source";
 import * as GoogleInterface from "./conversation-interface";
 import { Configuration } from "./private-interfaces";
 
@@ -39,5 +45,9 @@ export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
  * Add custom methods for here
  */
 export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends ApiAISpecificHandable<CustomTypes> {}
+
+export interface GoogleRequestContext extends DialogflowRequestContext {
+  body: DialogflowInterface.WebhookRequest<GoogleInterface.AppRequest>;
+}
 
 export { GoogleInterface };
