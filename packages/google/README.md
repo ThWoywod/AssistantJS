@@ -9,9 +9,9 @@ assistantJs.registerComponent(googleDescriptor);
 
 After that add the GoogleTypes and the Google-Handler to your handler-config.ts. Replace or remove `ADD_OTHER_TYPES_HERE` and `ADD_OTHER_HANDLER_HERE<CurrentAnswerTypes>` if needed.
 ```typescript
-import { GoogleTypes, GoogleHandler} from "assistant-google";
+import { GoogleSpecificTypes, GoogleHandler} from "assistant-google";
 
-export type CurrentAnswerTypes = GoogleTypes & ADD_OTHER_TYPES_HERE;
+export type CurrentAnswerTypes = GoogleSpecificTypes & ADD_OTHER_TYPES_HERE;
 export type CurrentHandler =  GoogleHandler<CurrentAnswerTypes> & ADD_OTHER_HANDLER_HERE<CurrentAnswerTypes>;
 ```
 
