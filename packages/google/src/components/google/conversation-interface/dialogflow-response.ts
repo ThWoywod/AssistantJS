@@ -1,4 +1,4 @@
-import { ExpectedIntent, RichResponse } from "./app-response";
+import { ExpectedIntent, RichResponse, SimpleResponse } from "./app-response";
 
 /**
  * The response message that AssistantJS sends to Dialogflow in
@@ -13,6 +13,8 @@ import { ExpectedIntent, RichResponse } from "./app-response";
  */
 export interface DialogflowResponse {
   google: {
+    noInputPrompts: SimpleResponse[];
+
     /** Indicates whether the app is expecting a user response. This is true when the conversation is ongoing, false when the conversation is done. */
     expectUserResponse: boolean;
     /**

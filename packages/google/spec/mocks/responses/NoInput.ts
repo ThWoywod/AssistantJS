@@ -4,6 +4,7 @@
 export const noInput = {
   payload: {
     google: {
+      expectUserResponse: true,
       noInputPrompts: [
         {
           textToSpeech: "I didn't hear you. Can you say your name?",
