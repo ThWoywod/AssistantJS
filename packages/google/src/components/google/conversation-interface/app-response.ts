@@ -1,4 +1,4 @@
-import { Argument } from "./common";
+import { Argument, Permission } from "./index";
 
 export type OpenUrlActionUrlTypeHint = "URL_TYPE_HINT_UNSPECIFIED" | "AMP_CONTENT";
 
@@ -11,6 +11,14 @@ export type ReasonType = "UNKNOWN" | "PAYMENT_DECLINED" | "INELIGIBLE" | "PROMO_
 export type MediaType = "MEDIA_TYPE_UNSPECIFIED" | "AUDIO";
 
 export type HorizontalAlignment = "LEADING" | "CENTER" | "TRAILING";
+
+export type PaymentMethodTokenizationType = "UNSPECIFIED_TOKENIZATION_TYPE" | "PAYMENT_GATEWAY" | "DIRECT";
+
+export type ProvidedPaymentOptionsSupportedCardNetwork = "UNSPECIFIED_CARD_NETWORK" | "AMEX" | "DISCOVER" | "MASTERCARD" | "VISA" | "JCB";
+
+export type CustomerInfoProperty = "CUSTOMER_INFO_PROPERTY_UNSPECIFIED" | "EMAIL";
+
+export type OrdersPaymentInfoPaymentType = "PAYMENT_TYPE_UNSPECIFIED" | "PAYMENT_CARD" | "BANK" | "LOYALTY_PROGRAM" | "ON_FULFILLMENT" | "GIFT_CARD";
 
 export type ActionType =
   | "UNKNOWN"
@@ -27,8 +35,13 @@ export type ActionType =
   | "FIX_ISSUE";
 
 /**
- * AppResponse is the response for the HTTP API call from the Assistant to the app.
+ * !!! IN ASSISTANTJS USE DIALOGFLOW WEBHOOK FORMAT !!!
+ * AppResponse is the response for the HTTP API call to the app.
  * The response to AppRequest must occur within 5 seconds of the app receiving a request.
+ * If you are using Dialogflow to create Actions, your fulfillment communicates with Dialogflow through its own,
+ * standard webhook format instead of the Actions on Google conversation webhook format.
+ * The Dialogflow webhook format contains all the information of the conversation webhook format along with additional Dialogflow-specific data,
+ * such as information about contexts and parameters.
  * @example
  * {
  * "conversationToken": string,
@@ -553,4 +566,280 @@ export interface Target {
    * If not specified, it will default to en-US.
    */
   locale?: string;
+}
+
+namespace ValueSpecifications {
+  /**
+   * Input for AskForConfirmation
+   */
+  export interface ConfirmationValueSpec {
+    /** Configures dialog that asks for confirmation. */
+    dialogSpec?: {
+      /** This is the question asked by confirmation sub-dialog. For example "Are you sure about that?" */
+      requestConfirmationText?: string;
+    };
+  }
+  /**
+   * Spec to control asking the user for a datetime.
+   */
+  export interface DateTimeValueSpec {
+    /** Control datetime prompts. */
+    dialogSpec?: DateTimeDialogSpec;
+  }
+
+  /**
+   * Speech configurations for asking for datetime. The fields in the dialogSpec are used to create prompt for the datetime dialog
+   */
+  export interface DateTimeDialogSpec {
+    /** This is used to create initial prompt by datetime sub-dialog. Example question: "What date and time do you want?" */
+    requestDatetimeText?: string;
+    /** This is used to create prompt to ask for date only. For example: What date are you looking for? */
+    requestDateText?: string;
+    /** This is used to create prompt to ask for time only. For example: What time? */
+    requestTimeText?: string;
+  }
+
+  /**
+   * Passed by the app as input for actions.intent.DELIVERY_ADDRESS
+   */
+  export interface DeliveryAddressValueSpec {
+    /** Configuration for delivery address dialog. */
+    addressOptions?: AddressOptions;
+  }
+
+  /**
+   * Options when asking for a delivery address.
+   */
+  export interface AddressOptions {
+    /**
+     * App can optionally pass a short text giving user a hint why delivery address is requested. For example,
+     * "Grubhub is asking your address for [determining the service area].", the text in [] is the custom TTS that should be populated here.
+     */
+    reason?: string;
+  }
+
+  /**
+   * Passed from the app as input for actions.intent.LINK.
+   */
+  export interface LinkValueSpec {
+    /** Destination that the app should link to. Could be a web URL, a conversational link or an Android intent. */
+    openUrlAction?: OpenUrlAction;
+    /** Prompts related metadata for helper sub-dialogs. */
+    dialogSpec?: {
+      /** Holds helper specific dialog specs if any. For example: ConfirmationDialogSpec for confirmation helper. */
+      extension?: {
+        [key: string]: any;
+      };
+    };
+  }
+
+  /**
+   * Ask the user to select one of the options.
+   */
+  export interface OptionValueSpec {
+    /**
+     * !!! Union field input. The actual input value input can be only one of the following: !!!
+     */
+    /** A simple select with no associated GUI */
+    simpleSelect?: SimpleSelect;
+    /** A select with a list card GUI */
+    listSelect?: ListSelect;
+    /** A select with a card carousel GUI */
+    carouselSelect?: CarouselSelect;
+  }
+
+  /**
+   * A simple select with no associated GUI. Please update assistant.logs.actions.SimpleSelect to reflect any changes made.
+   */
+  export interface SimpleSelect {
+    /** List of items users should select from. */
+    items?: SimpleSelectItem[];
+  }
+
+  export interface SimpleSelectItem {
+    /** Item key and synonyms. */
+    optionInfo?: OptionInfo;
+    /** Title of the item. It will act as synonym if it's provided. Optional */
+    title?: string;
+  }
+
+  /**
+   * Additional info about the option item related to triggering it in a dialog. Please update assistant.logs.actions.OptionInfo to reflect any changes made.
+   */
+  export interface OptionInfo {
+    /** A unique key that will be sent back to the agent if this response is given. */
+    key?: string;
+    /** A list of synonyms that can also be used to trigger this item in dialog. */
+    synonyms?: string[];
+  }
+
+  /** A card for presenting a list of options to select from. */
+  export interface ListSelect {
+    /** Overall title of the list. Optional. */
+    title?: string;
+    /** An item in the list. min: 2 max: 30 */
+    items?: ListItem[];
+  }
+
+  /**
+   * An item in a ListSelect
+   */
+  export interface ListItem {
+    /** Information about this option. See google.actions.v2.OptionInfo for details. Required. */
+    optionInfo: OptionInfo;
+    /**
+     * Title of the list item. When tapped, this text will be posted back to the conversation verbatim as if the user had typed it.
+     * Each title must be unique among the set of list items. Required.
+     */
+    title: string;
+    /** Main text describing the item. Optional. */
+    description?: string;
+    /** Square image. Optional. */
+    image: Image;
+  }
+
+  /**
+   * A card for presenting a carousel of options to select from.
+   */
+  export interface CarouselSelect {
+    /** An item in the carousel */
+    items?: CarouselItem;
+  }
+
+  export interface CarouselSelectCarouselItem {
+    /** See google.actions.v2.OptionInfo for details. Required. */
+    optionInfo: OptionInfo;
+    /**
+     * Title of the carousel item. When tapped, this text will be posted back to the conversation verbatim as if the user had typed it.
+     * Each title must be unique among the set of carousel items. Required.
+     */
+    title: string;
+    /** Body text of the card. */
+    description?: string;
+    /** Optional */
+    image?: Image;
+  }
+
+  /**
+   * Spec for asking for permission.
+   */
+  export interface PermissionValueSpec {
+    /** The context why agent needs to request permission. */
+    optContext?: string;
+    /** List of permissions requested by the agent. */
+    permissions?: Permission[];
+    /** Additional information needed to fulfill update permission request. */
+    updatePermissionValueSpec?: UpdatePermissionValueSpec;
+  }
+
+  /**
+   * Additional information needed for requesting an update permission
+   */
+  export interface UpdatePermissionValueSpec {
+    /** The intent that the user wants to get updates from. */
+    intent?: string;
+    /** The list of arguments necessary to fulfill an update */
+    arguments?: Argument[];
+  }
+
+  /**
+   * Returned to app as output for actions.intent.SIGN_IN.
+   */
+  export interface SignInValueSpec {
+    /** The optional context why the app needs to ask the user to sign in, as a prefix of a prompt for user consent, e.g. "To track your exercise", or "To check your account balance". */
+    optContext?: string;
+  }
+
+  /**
+   * Passed by the app as input for actions.intent.TRANSACTION_REQUIREMENTS_CHECK
+   */
+  export interface TransactionRequirementsCheckSpec {
+    /** Options associated with the order. */
+    orderOptions?: OrderOptions;
+    /** Payment options for this Order, or empty if no payment is associated with the Order. */
+    paymentOptions?: OrderPaymentOptions;
+  }
+
+  export interface OrderPaymentOptions {
+    /** Info for an Action-provided payment instrument for display on receipt. */
+    googleProvidedOptions?: GoogleProvidedPaymentOptions;
+    /** Requirements for Google provided payment instrument. */
+    actionProvidedOptions?: ActionProvidedPaymentOptions;
+  }
+
+  export interface GoogleProvidedPaymentOptions {
+    /**
+     * Required field for requesting Google provided payment instrument.
+     * These tokenization parameters will be used for generating payment token for use in transaction. The app should get these parameters from their payment gateway.
+     */
+    tokenizationParameters?: PaymentMethodTokenizationParameters;
+    /** Card network that may be used in the transaction */
+    supportedCardNetworks?: ProvidedPaymentOptionsSupportedCardNetwork[];
+    /** If true, disallow prepaid cards from being used in the transaction. */
+    prepaidCardDisallowed?: boolean;
+    /** If true, billing address will be returned. */
+    billingAddressRequired?: boolean;
+  }
+
+  /**
+   * Options associated with the order.
+   */
+  export interface OrderOptions {
+    /** If true, delivery address is required for the associated Order. */
+    requestDeliveryAddress?: boolean;
+    /** The app can request customer info by setting this field. If set, the corresponding field will show up in ProposedOrderCard for user's confirmation. */
+    customerInfoOptions?: CustomerInfoOptions;
+  }
+
+  /**
+   * The app can request customer info by setting this field.
+   * If set, the corresponding field will show up in ProposedOrderCard for user's confirmation.
+   */
+  export interface CustomerInfoOptions {
+    customerInfoProperties?: CustomerInfoProperty[];
+  }
+
+  /**
+   * Partner MUST specify the tokenization parameters if payment methods user saved with Google will be used in the transaction.
+   * Partner should be able to get these parameters from its own Payment Gateway.
+   */
+  export interface PaymentMethodTokenizationParameters {
+    /** Required */
+    tokenizationType: PaymentMethodTokenizationType;
+    /**
+     * If tokenizationType is set to PAYMENT_GATEWAY then the list of parameters should contain payment gateway specific parameters required to tokenize payment method
+     * as well as parameter with the name "gateway" with the value set to one of the gateways that we support e.g. "stripe" or "braintree".
+     * For further informaion see: https://developers.google.com/actions/reference/rest/Shared.Types/PaymentOptions#PaymentMethodTokenizationParameters#GoogleProvidedPaymentOptions
+     */
+    parameters?: {
+      [key: string]: string;
+    };
+  }
+
+  export interface ActionProvidedPaymentOptions {
+    /** Type of payment. Required. */
+    paymentType: OrdersPaymentInfoPaymentType;
+    /** ame of the instrument displayed on the receipt. Required for action-provided payment info. For PAYMENT_CARD, this could be "VISA-1234" */
+    displayName?: string;
+  }
+
+  // export interface TransactionDecisionValueSpec {
+  //   /**
+  //    * Options associated with the order.
+  //    */
+  //   orderOptions?: ProposedOrder
+  //   /**
+  //    * Payment options for this order, or empty if no payment
+  //    * is associated with the order.
+  //    */
+  //   paymentOptions?: OrderOptions
+  //   /**
+  //    * Options used to customize order presentation to the user.
+  //    */
+  //   presentationOptions?: PaymentOptions
+  //   /**
+  //    * The proposed order that's ready for user to approve.
+  //    */
+  //   proposedOrder?: PresentationOptions
+  // }
 }
