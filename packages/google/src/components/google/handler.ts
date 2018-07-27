@@ -68,6 +68,10 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
       this.fillReprompts,
       this.fillSessionData,
       this.fillSuggestionChips,
+      this.fillGoogleList,
+      this.fillGoogleTable,
+      this.fillGoogleCarousel,
+      this.fillGoogleBrowsingCarousel,
     ].forEach((fn: (results: Partial<CustomTypes>, payload: Partial<DialogflowResponse["google"]>) => Partial<DialogflowResponse["google"]>) => {
       googlePayload = fn.bind(this)(results, googlePayload);
     });
@@ -227,6 +231,62 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
         return {
           title: chip,
         };
+      });
+    }
+
+    return payload;
+  }
+
+  private fillGoogleList(results: Partial<CustomTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+    if (results.googleList) {
+      payload.systemIntent = {
+        intent: "actions.intent.OPTION",
+        data: {
+          "@type": "type.googleapis.com/google.actions.v2.OptionValueSpec",
+          listSelect: results.googleList,
+        },
+      };
+    }
+
+    return payload;
+  }
+
+  private fillGoogleBrowsingCarousel(results: Partial<CustomTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+    if (results.googleBrowsingCarousel) {
+      if (!payload.richResponse) {
+        payload.richResponse = this.createRichResponse();
+      }
+
+      payload.richResponse.items!.push({
+        carouselBrowse: results.googleBrowsingCarousel,
+      });
+    }
+
+    return payload;
+  }
+
+  private fillGoogleCarousel(results: Partial<CustomTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+    if (results.googleCarousel) {
+      payload.systemIntent = {
+        intent: "actions.intent.OPTION",
+        data: {
+          "@type": "type.googleapis.com/google.actions.v2.OptionValueSpec",
+          carouselSelect: results.googleCarousel,
+        },
+      };
+    }
+
+    return payload;
+  }
+
+  private fillGoogleTable(results: Partial<CustomTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+    if (results.googleTable) {
+      if (!payload.richResponse) {
+        payload.richResponse = this.createRichResponse();
+      }
+
+      payload.richResponse.items!.push({
+        tableCard: results.googleTable,
       });
     }
 

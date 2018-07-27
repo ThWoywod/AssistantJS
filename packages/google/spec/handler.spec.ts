@@ -298,7 +298,7 @@ describe("Handler", function() {
   describe("GoogleCarousel", function() {
     beforeEach(async function(this: CurrentThisContext) {
       this.responseResults = {
-        voiceMessage: { isSSML: false, text: "Alright! Here are a few web pages you might want to check out." },
+        voiceMessage: { isSSML: false, text: "Choose a item" },
         googleCarousel: {
           items: [
             {
