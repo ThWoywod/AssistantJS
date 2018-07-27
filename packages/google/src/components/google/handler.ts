@@ -29,6 +29,26 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
     super(requestContext, extraction, killSession, responseHandlerExtensions);
   }
 
+  public setGoogleList(list: CustomTypes["googleList"] | Promise<CustomTypes["googleList"]>): this {
+    this.promises.googleList = { resolver: list };
+    return this;
+  }
+
+  public setGoogleBrowsingCarousel(carousel: CustomTypes["googleBrowsingCarousel"] | Promise<CustomTypes["googleBrowsingCarousel"]>): this {
+    this.promises.googleBrowsingCarousel = { resolver: carousel };
+    return this;
+  }
+
+  public setGoogleCarousel(carousel: CustomTypes["googleCarousel"] | Promise<CustomTypes["googleCarousel"]>): this {
+    this.promises.googleCarousel = { resolver: carousel };
+    return this;
+  }
+
+  public setGoogleTable(table: CustomTypes["googleTable"] | Promise<CustomTypes["googleTable"]>): this {
+    this.promises.googleTable = { resolver: table };
+    return this;
+  }
+
   /**
    * creates the google-specific response for Dialogflow
    * @param results current results
