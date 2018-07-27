@@ -299,32 +299,30 @@ describe("Handler", function() {
     beforeEach(async function(this: CurrentThisContext) {
       this.responseResults = {
         voiceMessage: { isSSML: false, text: "Choose a item" },
-        googleCarousel: {
-          items: [
-            {
-              optionInfo: {
-                key: "first title",
-              },
-              description: "first description",
-              image: {
-                url: "https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png",
-                accessibilityText: "first alt",
-              },
-              title: "first title",
+        googleCarousel: [
+          {
+            optionInfo: {
+              key: "first title",
             },
-            {
-              optionInfo: {
-                key: "second",
-              },
-              description: "second description",
-              image: {
-                url: "https://lh3.googleusercontent.com/Nu3a6F80WfixUqf_ec_vgXy_c0-0r4VLJRXjVFF_X_CIilEu8B9fT35qyTEj_PEsKw",
-                accessibilityText: "second alt",
-              },
-              title: "second title",
+            description: "first description",
+            image: {
+              url: "https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png",
+              accessibilityText: "first alt",
             },
-          ],
-        },
+            title: "first title",
+          },
+          {
+            optionInfo: {
+              key: "second",
+            },
+            description: "second description",
+            image: {
+              url: "https://lh3.googleusercontent.com/Nu3a6F80WfixUqf_ec_vgXy_c0-0r4VLJRXjVFF_X_CIilEu8B9fT35qyTEj_PEsKw",
+              accessibilityText: "second alt",
+            },
+            title: "second title",
+          },
+        ],
       };
 
       this.actualResponse = (this.handler as any).getBody(this.responseResults);

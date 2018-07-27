@@ -271,7 +271,9 @@ export class GoogleHandler<CustomTypes extends GoogleSpecificTypes>
         intent: "actions.intent.OPTION",
         data: {
           "@type": "type.googleapis.com/google.actions.v2.OptionValueSpec",
-          carouselSelect: results.googleCarousel,
+          carouselSelect: {
+            items: results.googleCarousel,
+          },
         },
       };
     }

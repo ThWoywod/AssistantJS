@@ -58,7 +58,7 @@ export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
    *
    * https://developers.google.com/actions/assistant/responses#carousel
    */
-  googleCarousel: GoogleInterface.ValueSpecifications.CarouselSelect;
+  googleCarousel: GoogleInterface.ValueSpecifications.CarouselSelectCarouselItem[];
 
   /**
    * Table
