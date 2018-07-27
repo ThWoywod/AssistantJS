@@ -703,7 +703,7 @@ export namespace ValueSpecifications {
    */
   export interface CarouselSelect {
     /** An item in the carousel */
-    items?: CarouselItem;
+    items?: CarouselSelectCarouselItem[];
   }
 
   export interface CarouselSelectCarouselItem {
