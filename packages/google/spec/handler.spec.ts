@@ -211,6 +211,7 @@ describe("Handler", function() {
 
         this.actualResponse = (this.handler as any).getBody(this.responseResults);
       });
+      
       it("returns only voiceMessage", async function(this: CurrentThisContext) {
         expect(this.actualResponse).toEqual(simpleResponse as DialogflowInterface.WebhookResponse<DialogflowResponse>);
       });

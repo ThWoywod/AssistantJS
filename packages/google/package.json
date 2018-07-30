@@ -41,6 +41,7 @@
     "inversify": "4.1.1",
     "inversify-components": "^0.4.0",
     "jasmine-ts": "^0.2.1",
+    "nyc": "^11.9.0",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
     "tslint": "^5.4.0",
