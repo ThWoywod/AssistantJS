@@ -467,7 +467,7 @@ export interface MediaObject {
  */
 export interface CarouselBrowse {
   /** Min: 2. Max: 10. */
-  item?: CarouselItem[];
+  items?: CarouselItem[];
   /** Tyoe if image display option */
   imageDisplayOptions?: ImageDisplayOptions;
 }
@@ -568,7 +568,7 @@ export interface Target {
   locale?: string;
 }
 
-namespace ValueSpecifications {
+export namespace ValueSpecifications {
   /**
    * Input for AskForConfirmation
    */
@@ -703,7 +703,7 @@ namespace ValueSpecifications {
    */
   export interface CarouselSelect {
     /** An item in the carousel */
-    items?: CarouselItem;
+    items?: CarouselSelectCarouselItem[];
   }
 
   export interface CarouselSelectCarouselItem {
