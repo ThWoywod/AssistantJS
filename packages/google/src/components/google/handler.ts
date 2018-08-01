@@ -16,35 +16,35 @@ import { DialogflowResponse } from "./conversation-interface/dialogflow-response
 import { GoogleInterface, GoogleSpecificHandable, GoogleSpecificTypes } from "./public-interfaces";
 
 @injectable()
-export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
-  extends AuthenticationMixin(CardMixin(ChatBubblesMixin(RepromptsMixin(SessionDataMixin(SuggestionChipsMixin(ApiAiHandler))))))<MergedTypes>
-  implements GoogleSpecificHandable<MergedTypes> {
+export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes>
+  extends AuthenticationMixin(CardMixin(ChatBubblesMixin(RepromptsMixin(SessionDataMixin(SuggestionChipsMixin(ApiAiHandler))))))<MergedAnswerTypes>
+  implements GoogleSpecificHandable<MergedAnswerTypes> {
   constructor(
     @inject(injectionNames.current.requestContext) requestContext: RequestContext,
     @inject(injectionNames.current.extraction) extraction: MinimalRequestExtraction,
     @inject(injectionNames.current.killSessionService) killSession: () => Promise<void>,
     @inject(injectionNames.current.responseHandlerExtensions)
-    responseHandlerExtensions: ResponseHandlerExtensions<MergedTypes, GoogleSpecificHandable<MergedTypes>>
+    responseHandlerExtensions: ResponseHandlerExtensions<MergedAnswerTypes, GoogleSpecificHandable<MergedAnswerTypes>>
   ) {
     super(requestContext, extraction, killSession, responseHandlerExtensions);
   }
 
-  public setGoogleList(list: MergedTypes["googleList"] | Promise<MergedTypes["googleList"]>): this {
+  public setGoogleList(list: MergedAnswerTypes["googleList"] | Promise<MergedAnswerTypes["googleList"]>): this {
     this.promises.googleList = { resolver: list };
     return this;
   }
 
-  public setGoogleBrowsingCarousel(carousel: MergedTypes["googleBrowsingCarousel"] | Promise<MergedTypes["googleBrowsingCarousel"]>): this {
+  public setGoogleBrowsingCarousel(carousel: MergedAnswerTypes["googleBrowsingCarousel"] | Promise<MergedAnswerTypes["googleBrowsingCarousel"]>): this {
     this.promises.googleBrowsingCarousel = { resolver: carousel };
     return this;
   }
 
-  public setGoogleCarousel(carousel: MergedTypes["googleCarousel"] | Promise<MergedTypes["googleCarousel"]>): this {
+  public setGoogleCarousel(carousel: MergedAnswerTypes["googleCarousel"] | Promise<MergedAnswerTypes["googleCarousel"]>): this {
     this.promises.googleCarousel = { resolver: carousel };
     return this;
   }
 
-  public setGoogleTable(table: MergedTypes["googleTable"] | Promise<MergedTypes["googleTable"]>): this {
+  public setGoogleTable(table: MergedAnswerTypes["googleTable"] | Promise<MergedAnswerTypes["googleTable"]>): this {
     this.promises.googleTable = { resolver: table };
     return this;
   }
@@ -53,7 +53,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * creates the google-specific response for Dialogflow
    * @param results current results
    */
-  public getBody(results: Partial<MergedTypes>): DialogflowInterface.WebhookResponse<DialogflowResponse> {
+  public getBody(results: Partial<MergedAnswerTypes>): DialogflowInterface.WebhookResponse<DialogflowResponse> {
     // Grab response for api.ai with empty results, so that no fullfilment texts are added
     const response: DialogflowInterface.WebhookResponse<Partial<DialogflowResponse>> = super.getBody({});
 
@@ -72,7 +72,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
       this.fillGoogleTable,
       this.fillGoogleCarousel,
       this.fillGoogleBrowsingCarousel,
-    ].forEach((fn: (results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>) => Partial<DialogflowResponse["google"]>) => {
+    ].forEach((fn: (results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>) => Partial<DialogflowResponse["google"]>) => {
       googlePayload = fn.bind(this)(results, googlePayload);
     });
 
@@ -88,7 +88,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param results current results
    * @param payload google-specific answer
    */
-  private fillEndSession(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillEndSession(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     payload.expectUserResponse = !results.shouldSessionEnd; // to convert optional undefined to boolean
 
     return payload;
@@ -99,7 +99,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param results current results
    * @param payload google-specific answer
    */
-  private fillAuthentication(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillAuthentication(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     if (results.shouldAuthenticate) {
       payload.systemIntent = {
         intent: "actions.intent.SIGN_IN",
@@ -114,7 +114,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param results current results
    * @param payload google-specific answer
    */
-  private fillCard(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillCard(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     if (results.card) {
       if (!payload.richResponse) {
         payload.richResponse = this.createRichResponse();
@@ -141,7 +141,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param results current results
    * @param payload google-specific answer
    */
-  private fillVoiceMessage(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillVoiceMessage(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     const currentPayload = payload;
 
     if (results.voiceMessage) {
@@ -194,7 +194,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param results current results
    * @param payload google-specific answer
    */
-  private fillReprompts(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillReprompts(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     if (results.reprompts && results.reprompts.length > 0) {
       payload.noInputPrompts = results.reprompts!.map(value => this.createSimpleResponse(value));
     }
@@ -207,7 +207,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param results current results
    * @param payload google-specific answer
    */
-  private fillSessionData(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillSessionData(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     // Add session data
     if (results.sessionData) {
       payload.userStorage = results.sessionData;
@@ -221,7 +221,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param results current results
    * @param payload google-specific answer
    */
-  private fillSuggestionChips(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillSuggestionChips(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     if (results.suggestionChips && results.suggestionChips.length > 0 && !results.shouldSessionEnd) {
       if (!payload.richResponse) {
         payload.richResponse = this.createRichResponse();
@@ -237,7 +237,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
     return payload;
   }
 
-  private fillGoogleList(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillGoogleList(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     if (results.googleList) {
       payload.systemIntent = {
         intent: "actions.intent.OPTION",
@@ -251,7 +251,10 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
     return payload;
   }
 
-  private fillGoogleBrowsingCarousel(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillGoogleBrowsingCarousel(
+    results: Partial<MergedAnswerTypes>,
+    payload: Partial<DialogflowResponse["google"]>
+  ): Partial<DialogflowResponse["google"]> {
     if (results.googleBrowsingCarousel) {
       if (!payload.richResponse) {
         payload.richResponse = this.createRichResponse();
@@ -265,7 +268,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
     return payload;
   }
 
-  private fillGoogleCarousel(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillGoogleCarousel(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     if (results.googleCarousel) {
       payload.systemIntent = {
         intent: "actions.intent.OPTION",
@@ -281,7 +284,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
     return payload;
   }
 
-  private fillGoogleTable(results: Partial<MergedTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
+  private fillGoogleTable(results: Partial<MergedAnswerTypes>, payload: Partial<DialogflowResponse["google"]>): Partial<DialogflowResponse["google"]> {
     if (results.googleTable) {
       if (!payload.richResponse) {
         payload.richResponse = this.createRichResponse();
@@ -309,7 +312,7 @@ export class GoogleHandler<MergedTypes extends GoogleSpecificTypes>
    * @param voiceMessage current voiiceMessage
    * @param displayText optional text to display
    */
-  private createSimpleResponse(voiceMessage: MergedTypes["voiceMessage"] | string, displayText?: string): GoogleInterface.SimpleResponse {
+  private createSimpleResponse(voiceMessage: MergedAnswerTypes["voiceMessage"] | string, displayText?: string): GoogleInterface.SimpleResponse {
     let result: GoogleInterface.SimpleResponse;
     if (typeof voiceMessage !== "string") {
       // is either ssml or text
