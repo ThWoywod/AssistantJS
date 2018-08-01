@@ -1,5 +1,5 @@
 import {
-  ApiAISpecificHandable,
+  ApiAiSpecificHandable,
   ApiAiSpecificTypes,
   DialogflowInterface,
   DialogflowRequestContext,
@@ -71,7 +71,7 @@ export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
 /**
  * Add custom methods for here
  */
-export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends ApiAISpecificHandable<CustomTypes> {
+export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends ApiAiSpecificHandable<CustomTypes> {
   setGoogleList(list: CustomTypes["googleList"] | Promise<CustomTypes["googleList"]>): this;
   setGoogleBrowsingCarousel(carousel: CustomTypes["googleBrowsingCarousel"] | Promise<CustomTypes["googleBrowsingCarousel"]>): this;
   setGoogleCarousel(carousel: CustomTypes["googleCarousel"] | Promise<CustomTypes["googleCarousel"]>): this;

@@ -3,16 +3,16 @@ import { SpecHelper } from "assistant-source";
 import { GoogleInterface, GoogleSpecificHandable, GoogleSpecificTypes } from "../src/assistant-google";
 import { DialogflowResponse } from "../src/components/google/conversation-interface/dialogflow-response";
 import { GoogleSpecHelper } from "../src/spec-helper";
-import { askForSignIn } from "./mocks/responses/AskForSignIn";
-import { endConversation } from "./mocks/responses/EndConversation";
-import { noInput } from "./mocks/responses/NoInput";
-import { browseCarousel } from "./mocks/responses/RichResponses/BrowseCarousel";
-import { carouselResponse } from "./mocks/responses/RichResponses/CarouselResponse";
-import { listResponse } from "./mocks/responses/RichResponses/ListResponse";
-import { simpleResponse } from "./mocks/responses/RichResponses/SimpleResponse";
-import { simpleResponseMultipleChatBubbles } from "./mocks/responses/RichResponses/SimpleResponseMultipleChatBubbles";
-import { simpleResponseTts } from "./mocks/responses/RichResponses/SimpleResponseTts";
-import { tableCard } from "./mocks/responses/RichResponses/TableCard";
+import { askForSignIn } from "./mocks/responses/ask-for-sign-in";
+import { endConversation } from "./mocks/responses/end-conversation";
+import { noInput } from "./mocks/responses/no-input";
+import { browseCarousel } from "./mocks/responses/rich-responses/browse-carousel";
+import { carouselResponse } from "./mocks/responses/rich-responses/carousel-response";
+import { listResponse } from "./mocks/responses/rich-responses/list-response";
+import { simpleResponse } from "./mocks/responses/rich-responses/simple-response";
+import { simpleResponseMultipleChatBubbles } from "./mocks/responses/rich-responses/simple-response-multiple-chat-bubbles";
+import { simpleResponseTts } from "./mocks/responses/rich-responses/simple-response-tts";
+import { tableCard } from "./mocks/responses/rich-responses/table-card";
 
 interface CurrentThisContext {
   specHelper: SpecHelper;

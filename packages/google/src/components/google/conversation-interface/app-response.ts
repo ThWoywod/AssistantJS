@@ -1,4 +1,4 @@
-import { Argument, Permission } from "./index";
+import { Argument, Permission } from ".";
 
 export type OpenUrlActionUrlTypeHint = "URL_TYPE_HINT_UNSPECIFIED" | "AMP_CONTENT";
 

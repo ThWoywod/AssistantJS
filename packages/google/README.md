@@ -10,9 +10,12 @@ assistantJs.registerComponent(googleDescriptor);
 After that add the GoogleTypes and the Google-Handler to your handler-config.ts. Replace or remove `ADD_OTHER_TYPES_HERE` and `ADD_OTHER_HANDLER_HERE<CurrentAnswerTypes>` if needed.
 ```typescript
 import { GoogleSpecificTypes, GoogleHandler} from "assistant-google";
+import { State } from "assistant-source";
 
-export type CurrentAnswerTypes = GoogleSpecificTypes & ADD_OTHER_TYPES_HERE;
-export type CurrentHandler =  GoogleHandler<CurrentAnswerTypes> & ADD_OTHER_HANDLER_HERE<CurrentAnswerTypes>;
+export type MergedAnswerTypes = GoogleSpecificTypes & ADD_OTHER_TYPES_HERE;
+export type MergedHandler = GoogleHandler<CurrentAnswerTypes> & ADD_OTHER_HANDLER_HERE<MergedAnswerTypes>;
+
+export type MergedSetupSet = State.SetupSet<MergedAnswerTypes, MergedHandler>
 ```
 
 And that's it! Your AssistantJS voice application is now ready for Google Assistant. There is no more configuration needed!
