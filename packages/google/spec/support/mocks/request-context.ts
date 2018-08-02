@@ -1,6 +1,7 @@
 import { RequestContext } from "assistant-source";
 
 export const validRequestContext: RequestContext = {
+  // tslint:disable-next-line:no-empty
   responseCallback: () => {},
   id: "my-request-id",
   path: "/apiai",

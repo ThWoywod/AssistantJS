@@ -7,8 +7,8 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
 
   public async pretendIntentCalled(intent: Intent, autoStart = true, additionalExtractions = {}, additionalContext = {}) {
     const extraction: Extraction = {
-      platform: "google",
       intent,
+      platform: "google",
       sessionID: "apiai-mock-session-id",
       sessionData: '{"mock-google-user-key":"my-google-user-value"}',
       language: "en",
@@ -26,6 +26,7 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
       path: "/apiai",
       body: {},
       headers: {},
+      // tslint:disable-next-line:no-empty
       responseCallback: () => {},
       ...additionalContext,
     };

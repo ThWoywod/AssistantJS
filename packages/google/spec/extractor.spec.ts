@@ -1,3 +1,4 @@
+// tslint:disable-next-line:no-submodule-imports
 import { componentInterfaces } from "assistant-source/lib/components/unifier/private-interfaces";
 import { GoogleRequestContext } from "../src/assistant-google";
 import { Extractor } from "../src/components/google/extractor";
