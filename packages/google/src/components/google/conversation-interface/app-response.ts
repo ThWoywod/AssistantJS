@@ -2,7 +2,7 @@ import { Argument, Permission } from ".";
 
 export type OpenUrlActionUrlTypeHint = "URL_TYPE_HINT_UNSPECIFIED" | "AMP_CONTENT";
 
-export type ImageDisplayOptions = "DEFAULT" | "WHITE" | "CROPPED";
+export type ImageDisplayOptionsType = "DEFAULT" | "WHITE" | "CROPPED";
 
 export type PriceType = "UNKNOWN" | "ESTIMATE" | "ACTUAL";
 
@@ -16,9 +16,11 @@ export type PaymentMethodTokenizationType = "UNSPECIFIED_TOKENIZATION_TYPE" | "P
 
 export type ProvidedPaymentOptionsSupportedCardNetwork = "UNSPECIFIED_CARD_NETWORK" | "AMEX" | "DISCOVER" | "MASTERCARD" | "VISA" | "JCB";
 
-export type CustomerInfoProperty = "CUSTOMER_INFO_PROPERTY_UNSPECIFIED" | "EMAIL";
+export type CustomerInfoPropertyType = "CUSTOMER_INFO_PROPERTY_UNSPECIFIED" | "EMAIL";
 
 export type OrdersPaymentInfoPaymentType = "PAYMENT_TYPE_UNSPECIFIED" | "PAYMENT_CARD" | "BANK" | "LOYALTY_PROGRAM" | "ON_FULFILLMENT" | "GIFT_CARD";
+
+export type OrdersLineItemType = "UNSPECIFIED" | "REGULAR" | "TAX" | "DISCOUNT" | "GRATUITY" | "DELIVERY" | "SUBTOTAL" | "FEE";
 
 export type ActionType =
   | "UNKNOWN"
@@ -207,7 +209,7 @@ export interface BasicCard {
   /** Buttons. Currently at most 1 button is supported. Optional. */
   buttons?: Button[];
   /** Type of image display option. Optional. */
-  imageDisplayOptions?: ImageDisplayOptions;
+  imageDisplayOptions?: ImageDisplayOptionsType;
 }
 
 /**
@@ -469,7 +471,7 @@ export interface CarouselBrowse {
   /** Min: 2. Max: 10. */
   items?: CarouselItem[];
   /** Tyoe if image display option */
-  imageDisplayOptions?: ImageDisplayOptions;
+  imageDisplayOptions?: ImageDisplayOptionsType;
 }
 
 /**
@@ -760,6 +762,9 @@ export namespace ValueSpecifications {
     paymentOptions?: OrderPaymentOptions;
   }
 
+  /**
+   * Options for payment associated with a order.
+   */
   export interface OrderPaymentOptions {
     /** Info for an Action-provided payment instrument for display on receipt. */
     googleProvidedOptions?: GoogleProvidedPaymentOptions;
@@ -767,6 +772,9 @@ export namespace ValueSpecifications {
     actionProvidedOptions?: ActionProvidedPaymentOptions;
   }
 
+  /**
+   * Requirements for Google-provided payment method.
+   */
   export interface GoogleProvidedPaymentOptions {
     /**
      * Required field for requesting Google provided payment instrument.
@@ -796,7 +804,7 @@ export namespace ValueSpecifications {
    * If set, the corresponding field will show up in ProposedOrderCard for user's confirmation.
    */
   export interface CustomerInfoOptions {
-    customerInfoProperties?: CustomerInfoProperty[];
+    customerInfoProperties?: CustomerInfoPropertyType[];
   }
 
   /**
@@ -816,6 +824,9 @@ export namespace ValueSpecifications {
     };
   }
 
+  /**
+   * Requirements for Action-provided payment method.
+   */
   export interface ActionProvidedPaymentOptions {
     /** Type of payment. Required. */
     paymentType: OrdersPaymentInfoPaymentType;
@@ -823,23 +834,137 @@ export namespace ValueSpecifications {
     displayName?: string;
   }
 
-  // export interface TransactionDecisionValueSpec {
-  //   /**
-  //    * Options associated with the order.
-  //    */
-  //   orderOptions?: ProposedOrder
-  //   /**
-  //    * Payment options for this order, or empty if no payment
-  //    * is associated with the order.
-  //    */
-  //   paymentOptions?: OrderOptions
-  //   /**
-  //    * Options used to customize order presentation to the user.
-  //    */
-  //   presentationOptions?: PaymentOptions
-  //   /**
-  //    * The proposed order that's ready for user to approve.
-  //    */
-  //   proposedOrder?: PresentationOptions
-  // }
+  /**
+   * Passed from the app as input for actions.intent.TRANSACTION_DECISION.
+   */
+  export interface TransactionDecisionValueSpec {
+    /**
+     * Options associated with the order.
+     */
+    orderOptions?: ProposedOrder;
+    /**
+     * Payment options for this order, or empty if no payment
+     * is associated with the order.
+     */
+    paymentOptions?: OrderOptions;
+    /**
+     * Options used to customize order presentation to the user.
+     */
+    presentationOptions?: PaymentOptions;
+    /**
+     * The proposed order that's ready for user to approve.
+     */
+    proposedOrder?: ProposedOrder;
+  }
+
+  export interface ProposedOrder {
+    /** User's items. */
+    cart?: Cart;
+    /**
+     * Extension to the proposed order based on the kind of order.
+     * For example, if the order includes a location then this extension will
+     * contain a OrderLocation value.
+     */
+    extension?: {
+      [key: string]: any;
+    };
+    /** Optional id for this ProposedOrder. Included as part of the ProposedOrder returned back to the integrator at confirmation time. */
+    id?: string;
+    /**
+     * Image associated with the proposed order.
+     */
+    image?: Image;
+    /** Fees, adjustments, subtotals, etc. */
+    otherItems?: OrdersLineItemType[];
+    /** A link to the terms of service that apply to this proposed order. */
+    termsOfServiceUrl?: string;
+    /** Total price of the proposed order. If of type `ACTUAL`, this is the amount the caller will charge when the user confirms the proposed order. */
+    totalPrice?: Price;
+  }
+
+  export interface Cart {
+    /** Optional id for this cart. Included as part of the Cart returned back to the integrator at confirmation time. */
+    id?: string;
+    /** Merchant for the cart, if different from the caller. */
+    merchant?: Merchant;
+    /** The good(s) or service(s) the user is ordering. There must be at least one line item. */
+    lineItems?: OrdersLineItemType[];
+    /** Adjustments entered by the user, e.g. gratuity. */
+    otherItems?: OrdersLineItemType[];
+    /** Notes about this cart. */
+    notes: string;
+    /** Optional. Promotional coupons added to the cart. Eligible promotions will be sent back as discount line items in proposed order. */
+    promotions?: Array<{
+      /** Required. Coupon code understood by 3P. For ex: GOOGLE10. */
+      coupon?: string;
+    }>;
+    /** Extension to the cart based on the type of order. An object containing fields of an arbitrary type. An additional field "@type" contains a URI identifying the type. */
+    extension?: {
+      [key: string]: any;
+    };
+  }
+
+  /**
+   * Merchant for the cart.
+   */
+  export interface Merchant {
+    /** Id of the merchant. */
+    id?: string;
+    /** User-visible name of the merchant. Required. */
+    name?: string;
+  }
+
+  /**
+   * Line item in order.
+   */
+  export interface OrdersLineItem {
+    /** Unique id of the line item within the Cart/Order. Required. */
+    id: string;
+    /** Name of the line item as displayed in the receipt. Required. */
+    name: string;
+    /** Type of line item. */
+    type: OrdersLineItemType;
+    /** Number of items included. */
+    quantity?: number;
+    /** Description of the item. */
+    description?: string;
+    /** Small image associated with this item. */
+    image: Image;
+    /** Each line item should have a price, even if the price is 0. Required. This is the total price as displayed on the receipt for this line (i.e. unit price * quantity). */
+    price: Price;
+    /** Sub-line item(s). Only valid if type is REGULAR. */
+    subLines?: SubLine[];
+    /** Optional product or offer id for this item. */
+    offerId?: string;
+    /** Extension to the cart based on the type of order. An object containing fields of an arbitrary type. An additional field "@type" contains a URI identifying the type. */
+    extension?: {
+      [key: string]: any;
+    };
+  }
+
+  /**
+   * SubLine item associated with line item in order.
+   */
+  export interface SubLine {
+    /**
+     * !!! Union field input. The actual input value input can be only one of the following: !!!
+     */
+    /** */
+    lineItem?: OrdersLineItem;
+    /** A note associated with the line item. */
+    note?: string;
+  }
+
+  /**
+   * Input for AskForPlace.
+   */
+  export interface PlaceValueSpec {
+    /** Speech configuration for askForPlace dialog. The extension should be used to define the PlaceDialogSpec configuration. */
+    dialogSpec?: {
+      /** Holds helper specific dialog specs if any. For example: ConfirmationDialogSpec for confirmation helper. */
+      extension?: {
+        [key: string]: any;
+      };
+    };
+  }
 }
