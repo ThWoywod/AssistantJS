@@ -1,10 +1,12 @@
 import { ApiAiHandler, DialogflowInterface } from "assistant-apiai";
 import {
+  applyMixin,
   AuthenticationMixin,
   CardMixin,
   ChatBubblesMixin,
   injectionNames,
   MinimalRequestExtraction,
+  OptionalHandlerFeatures,
   RepromptsMixin,
   RequestContext,
   ResponseHandlerExtensions,
@@ -16,9 +18,30 @@ import { DialogflowResponse } from "./conversation-interface/dialogflow-response
 import { GoogleInterface, GoogleSpecificHandable, GoogleSpecificTypes } from "./public-interfaces";
 
 @injectable()
-export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes>
-  extends AuthenticationMixin(CardMixin(ChatBubblesMixin(RepromptsMixin(SessionDataMixin(SuggestionChipsMixin(ApiAiHandler))))))<MergedAnswerTypes>
-  implements GoogleSpecificHandable<MergedAnswerTypes> {
+export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes> extends ApiAiHandler<MergedAnswerTypes>
+  implements
+    GoogleSpecificHandable<MergedAnswerTypes>,
+    OptionalHandlerFeatures.Authentication,
+    OptionalHandlerFeatures.Card<MergedAnswerTypes>,
+    OptionalHandlerFeatures.ChatBubbles<MergedAnswerTypes>,
+    OptionalHandlerFeatures.Reprompts<MergedAnswerTypes>,
+    OptionalHandlerFeatures.SessionData<MergedAnswerTypes>,
+    OptionalHandlerFeatures.SuggestionChips<MergedAnswerTypes> {
+  /**
+   * define missing methods from Mixins here
+   */
+  public setCard!: (card: MergedAnswerTypes["card"] | Promise<MergedAnswerTypes["card"]>) => this;
+  public setChatBubbles!: (chatBubbles: MergedAnswerTypes["chatBubbles"] | Promise<MergedAnswerTypes["chatBubbles"]>) => this;
+  public setReprompts!: (
+    reprompts:
+      | Array<MergedAnswerTypes["voiceMessage"]["text"] | Promise<MergedAnswerTypes["voiceMessage"]["text"]>>
+      | Promise<Array<MergedAnswerTypes["voiceMessage"]["text"]>>
+  ) => this;
+  public setSessionData!: (sessionData: MergedAnswerTypes["sessionData"] | Promise<MergedAnswerTypes["sessionData"]>) => this;
+  public getSessionData!: () => Promise<MergedAnswerTypes["sessionData"]> | undefined;
+  public setSuggestionChips!: (suggestionChips: MergedAnswerTypes["suggestionChips"] | Promise<MergedAnswerTypes["suggestionChips"]>) => this;
+  public setUnauthenticated!: () => this;
+
   constructor(
     @inject(injectionNames.current.requestContext) requestContext: RequestContext,
     @inject(injectionNames.current.extraction) extraction: MinimalRequestExtraction,
@@ -336,3 +359,8 @@ export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes>
     return result;
   }
 }
+
+/**
+ * Apply Mixins
+ */
+applyMixin(GoogleHandler, [AuthenticationMixin, CardMixin, ChatBubblesMixin, RepromptsMixin, SessionDataMixin, SuggestionChipsMixin]);
