@@ -1,11 +1,16 @@
-import { intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
+import { HandlerProxyFactory, injectionNames, intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
 import { GoogleHandler } from "./components/google/handler";
 import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
 export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes, GoogleSpecificHandable<GoogleSpecificTypes>> {
   constructor(public specSetup: SpecHelper) {}
 
-  public async pretendIntentCalled(intent: Intent, autoStart = true, additionalExtractions = {}, additionalContext = {}) {
+  public async pretendIntentCalled(
+    intent: Intent,
+    autoStart = true,
+    additionalExtractions: Partial<Extraction> = {},
+    additionalContext = {}
+  ): Promise<GoogleSpecificHandable<GoogleSpecificTypes>> {
     const extraction: Extraction = {
       intent,
       platform: "google",
@@ -45,6 +50,11 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
       await this.specSetup.runMachine();
     }
 
-    return this.specSetup.setup.container.inversifyInstance.get<GoogleSpecificHandable<GoogleSpecificTypes>>("google:current-response-handler");
+    const proxyFactory = this.specSetup.setup.container.inversifyInstance.get<HandlerProxyFactory>(injectionNames.handlerProxyFactory);
+
+    const currentHandler = this.specSetup.setup.container.inversifyInstance.get<GoogleSpecificHandable<GoogleSpecificTypes>>("google:current-response-handler");
+    const proxiedHandler = proxyFactory.createHandlerProxy(currentHandler);
+
+    return proxiedHandler;
   }
 }
