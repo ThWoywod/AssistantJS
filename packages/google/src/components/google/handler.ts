@@ -32,6 +32,11 @@ export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes> extend
    */
   public setCard!: (card: MergedAnswerTypes["card"] | Promise<MergedAnswerTypes["card"]>) => this;
   public setChatBubbles!: (chatBubbles: MergedAnswerTypes["chatBubbles"] | Promise<MergedAnswerTypes["chatBubbles"]>) => this;
+  // @ts-ignore
+  public prompt!: (
+    inputText: MergedAnswerTypes["voiceMessage"]["text"] | Promise<MergedAnswerTypes["voiceMessage"]["text"]>,
+    ...reprompts: Array<MergedAnswerTypes["voiceMessage"]["text"] | Promise<MergedAnswerTypes["voiceMessage"]["text"]>>
+  ) => this;
   public setReprompts!: (
     reprompts:
       | Array<MergedAnswerTypes["voiceMessage"]["text"] | Promise<MergedAnswerTypes["voiceMessage"]["text"]>>
