@@ -1,3 +1,8 @@
+version 0.4.0
+- new RespopnseHandler for compatibility with AssistantJS 0.4.0
+- Support for the new Dialogflow webhook format with Dailogflow API v2
+- Renamed "SpecHelper" to "GoogleSpecHelper"
+
 version 0.3.1
 - fixes bug in fits() method, making assistant-google denying all incomming requests
 
@@ -13,7 +18,7 @@ version 0.2.2
 version 0.2.1
 - fixes forceAuthenticated interface, makes it send a simple voice response
 
-version 0.2
+version 0.2.0
 - introduces FORCED_GOOGLE_OAUTH_TOKEN
 - adds support for cards
 - adds support for suggestion chips
@@ -23,5 +28,5 @@ version 0.2
 - adds google webhook interfaces
 - introduces CHANGELOG and README
 
-version 0.1
+version 0.1.0
 - initial public release

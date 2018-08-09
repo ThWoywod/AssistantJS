@@ -1,5 +1,6 @@
-import { RequestContext } from "assistant-source";
+// tslint:disable-next-line:no-submodule-imports
 import { componentInterfaces } from "assistant-source/lib/components/unifier/private-interfaces";
+import { GoogleRequestContext } from "../src/assistant-google";
 import { Extractor } from "../src/components/google/extractor";
 import { validRequestContext } from "./support/mocks/request-context";
 
@@ -10,16 +11,15 @@ describe("RequestExtractor", function() {
     this.context = { ...validRequestContext };
 
     this.expectedExtraction = {
-      sessionID: "my-session-id",
-      sessionData: "{\"my-session-key\":\"my-session-value\"}",
+      sessionID: "my-dialogflow-session",
+      sessionData: '{"my-session-key":"my-session-value"}',
       intent: "testIntent",
       entities: {},
       language: "en",
       platform: "google",
       oAuthToken: "my-access-token",
-      temporalAuthToken: "my-user-id",
-      requestTimestamp: "2017-06-24T16:00:18Z",
-      spokenText: "My query",
+      temporalAuthToken: "my-google-user-id",
+      spokenText: "Talk to my test app",
       device: "phone",
       additionalParameters: jasmine.any(Object),
     };
@@ -34,7 +34,7 @@ describe("RequestExtractor", function() {
 
     describe("with no screen capabilities", function() {
       beforeEach(function() {
-        this.context.body.originalRequest.data.surface.capabilities = [{ name: "actions.capability.AUDIO_OUTPUT" }];
+        this.context.body.originalDetectIntentRequest.payload.surface.capabilities = [{ name: "actions.capability.AUDIO_OUTPUT" }];
       });
 
       it("sets device to speaker", async function(done) {

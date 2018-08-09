@@ -1,50 +1,40 @@
-import {
-  intent,
-  PlatformSpecHelper,
-  RequestContext,
-  SpecSetup
-  } from "assistant-source";
-import { Component } from "inversify-components";
-import { GoogleHandle } from "./components/google/handle";
-import { Extraction, HandlerInterface } from "./components/google/public-interfaces";
+import { HandlerProxyFactory, injectionNames, intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
+import { GoogleHandler } from "./components/google/handler";
+import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
+export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes, GoogleSpecificHandable<GoogleSpecificTypes>> {
+  constructor(public specSetup: SpecHelper) {}
 
-export class SpecHelper implements PlatformSpecHelper {
-  specSetup: SpecSetup;
+  public async pretendIntentCalled(
+    intent: Intent,
+    autoStart = true,
+    additionalExtractions: Partial<Extraction> = {},
+    additionalContext = {}
+  ): Promise<GoogleSpecificHandable<GoogleSpecificTypes>> {
+    const extraction: Extraction = {
+      intent,
+      platform: "google",
+      sessionID: "apiai-mock-session-id",
+      sessionData: '{"mock-google-user-key":"my-google-user-value"}',
+      language: "en",
+      spokenText: "this is the spoken text",
+      oAuthToken: "mock-google-oauth",
+      temporalAuthToken: "mock-google-temporal-auth",
+      device: "phone",
+      additionalParameters: {},
+      ...additionalExtractions,
+    };
 
-  constructor(assistantSpecSetup: SpecSetup) {
-    this.specSetup = assistantSpecSetup;
-  }
-
-  async pretendIntentCalled(intent: intent, autoStart = true, additionalExtractions = {}, additionalContext = {}): Promise<HandlerInterface> {
-    let extraction: Extraction = Object.assign(
-      {
-        platform: "google",
-        intent: intent,
-        sessionID: "apiai-mock-session-id",
-        sessionData: "{\"mock-google-user-key\":\"my-google-user-value\"}",
-        language: "en",
-        spokenText: "this is the spoken text",
-        oAuthToken: "mock-google-oauth",
-        temporalAuthToken: "mock-google-temporal-auth",
-        device: "phone",
-        requestTimestamp: "2017-06-24T16:00:18Z",
-        additionalParameters: {},
-      },
-      additionalExtractions
-    );
-
-    let context: RequestContext = Object.assign(
-      {
-        id: "my-request-id",
-        method: "POST",
-        path: "/apiai",
-        body: {},
-        headers: {},
-        responseCallback: () => {},
-      },
-      additionalContext
-    );
+    const context: RequestContext = {
+      id: "my-request-id",
+      method: "POST",
+      path: "/apiai",
+      body: {},
+      headers: {},
+      // tslint:disable-next-line:no-empty
+      responseCallback: () => {},
+      ...additionalContext,
+    };
 
     this.specSetup.createRequestScope(extraction, context);
 
@@ -52,7 +42,7 @@ export class SpecHelper implements PlatformSpecHelper {
     this.specSetup.setup.container.inversifyInstance.unbind("google:current-response-handler");
     this.specSetup.setup.container.inversifyInstance
       .bind("google:current-response-handler")
-      .to(GoogleHandle)
+      .to(GoogleHandler)
       .inSingletonScope();
 
     // auto run machine if wanted
@@ -60,6 +50,11 @@ export class SpecHelper implements PlatformSpecHelper {
       await this.specSetup.runMachine();
     }
 
-    return this.specSetup.setup.container.inversifyInstance.get<GoogleHandle>("google:current-response-handler");
+    const proxyFactory = this.specSetup.setup.container.inversifyInstance.get<HandlerProxyFactory>(injectionNames.handlerProxyFactory);
+
+    const currentHandler = this.specSetup.setup.container.inversifyInstance.get<GoogleSpecificHandable<GoogleSpecificTypes>>("google:current-response-handler");
+    const proxiedHandler = proxyFactory.createHandlerProxy(currentHandler);
+
+    return proxiedHandler;
   }
 }
