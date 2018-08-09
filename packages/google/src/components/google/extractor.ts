@@ -88,9 +88,9 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     if (
       typeof context.body.originalDetectIntentRequest.payload !== "undefined" &&
       typeof context.body.originalDetectIntentRequest.payload.user !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.user.idToken !== "undefined"
+      typeof context.body.originalDetectIntentRequest.payload.user.userId !== "undefined"
     ) {
-      return context.body.originalDetectIntentRequest.payload.user.idToken;
+      return context.body.originalDetectIntentRequest.payload.user.userId;
     }
     return null;
   }

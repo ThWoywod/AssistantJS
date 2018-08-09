@@ -55,7 +55,7 @@ export const validRequestContext: RequestContext = {
           lastSeen: "2018-03-16T22:08:48Z",
           permissions: ["UPDATE"],
           locale: "en-US",
-          idToken: "my-google-user-id",
+          userId: "my-google-user-id",
           userStorage: '{"my-session-key":"my-session-value"}',
           accessToken: "my-access-token",
         },

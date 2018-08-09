@@ -58,6 +58,11 @@ export interface AppRequest {
  */
 export interface User {
   /**
+   * id of user
+   */
+  userId?: string
+
+  /**
    * Token representing the user's identity.
    * This is a Json web token including encoded profile.
    * The definition is at https://developers.google.com/identity/protocols/OpenIDConnect#obtainuserinfo.
