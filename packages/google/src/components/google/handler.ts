@@ -357,7 +357,7 @@ export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes> extend
       };
     }
 
-    if (displayText) {
+    if (typeof displayText !== "undefined") {
       result.displayText = displayText;
     }
 
