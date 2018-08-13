@@ -696,8 +696,8 @@ export namespace ValueSpecifications {
     title: string;
     /** Main text describing the item. Optional. */
     description?: string;
-    /** Square image. Optional. */
-    image: Image;
+    /** Square image. Optional. 48px x 48px */
+    image?: Image;
   }
 
   /**

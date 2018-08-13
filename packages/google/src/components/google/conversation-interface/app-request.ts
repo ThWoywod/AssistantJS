@@ -37,7 +37,7 @@ export interface AppRequest {
   /** User who initiated the conversation. */
   user?: User;
   /** Information about the device the user is using to interact with the app. */
-  device?: Device;
+  device?: DeviceInformation;
   /** Information about the surface the user is interacting with, e.g. whether it can output audio or has a screen. */
   surface?: Surface;
   /** Holds session data like the conversation ID and conversation token. */
@@ -60,7 +60,7 @@ export interface User {
   /**
    * id of user
    */
-  userId?: string
+  userId?: string;
 
   /**
    * Token representing the user's identity.
@@ -140,7 +140,7 @@ export interface SignedData {
 /**
  * Information about the device the user is using to interact with the Google Assistant.
  */
-export interface Device {
+export interface DeviceInformation {
   /** Represents actual device location such as lat, lng, and formatted address. Requires the DEVICE_COARSE_LOCATION or DEVICE_PRECISE_LOCATION permission. */
   location?: Location;
 }
