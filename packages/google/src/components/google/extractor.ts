@@ -143,21 +143,20 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
       context.body.originalDetectIntentRequest.payload!.inputs![0] &&
       context.body.originalDetectIntentRequest.payload!.inputs![0].intent === "actions.intent.OPTION"
     ) {
-      return GenericIntent.SelectedElement;
+      return GenericIntent.Selected;
     }
 
     // return unhandled intent from apiai
     return intent;
   }
 
-  protected getEntities(context: GoogleRequestContext);
   protected getEntities(context: GoogleRequestContext) {
-    const intent = super.getIntent(context);
+    const intent = this.getIntent(context);
     const entities: CommonRequestExtraction["entities"] = super.getEntities(context);
 
     // extract selectedElement
     if (
-      intent === GenericIntent.SelectedElement &&
+      intent === GenericIntent.Selected &&
       context.body.originalDetectIntentRequest.payload &&
       context.body.originalDetectIntentRequest.payload!.inputs &&
       context.body.originalDetectIntentRequest.payload!.inputs!.length > 0 &&
