@@ -1,7 +1,6 @@
+import { GenericIntent } from "assistant-source";
 // tslint:disable-next-line:no-submodule-imports
 import { componentInterfaces } from "assistant-source/lib/components/unifier/private-interfaces";
-import { GoogleRequestContext } from "../src/assistant-google";
-import { Extractor } from "../src/components/google/extractor";
 import { validRequestContext } from "./support/mocks/request-context";
 
 describe("RequestExtractor", function() {
@@ -53,6 +52,26 @@ describe("RequestExtractor", function() {
 
       it("returns content of FORCED_GOOGLE_OAUTH_TOKEN as extraction result", function() {
         expect(this.extraction.oAuthToken).toEqual("test");
+      });
+    });
+
+    describe("with selection", function() {
+      beforeEach(async function() {
+        this.context.body.queryResult.intent.displayName = "__unhandled";
+        this.context.body.originalDetectIntentRequest.payload!.inputs![0].intent = "actions.intent.OPTION";
+        this.context.body.originalDetectIntentRequest.payload!.inputs![0].arguments = [
+          {
+            textValue: "my-selected-key",
+            name: "OPTION",
+          },
+        ];
+
+        this.extraction = await this.extractor.extract(this.context);
+      });
+
+      it("returns SelectedIntent", async function() {
+        expect(this.extraction.intent).toBe(GenericIntent.Selected);
+        expect(this.extraction.entities).toEqual({ selectedElement: "my-selected-key" });
       });
     });
   });
