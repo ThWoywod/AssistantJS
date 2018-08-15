@@ -1,5 +1,14 @@
 import { Extractor as ApiAiExtractor } from "assistant-apiai";
-import { ComponentSpecificLoggerFactory, injectionNames, Logger, RequestContext, RequestExtractor } from "assistant-source";
+import {
+  CommonRequestExtraction,
+  ComponentSpecificLoggerFactory,
+  GenericIntent,
+  injectionNames,
+  intent as Intent,
+  Logger,
+  RequestContext,
+  RequestExtractor,
+} from "assistant-source";
 import { inject, injectable, optional } from "inversify";
 import { Component } from "inversify-components";
 
@@ -47,6 +56,8 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
     return {
       ...apiAiExtraction,
+      intent: this.getIntent(context),
+      entities: this.getEntities(context),
       platform: this.googleComponent.name,
       sessionData: this.getSessionData(context),
       oAuthToken: this.getOAuthToken(context),
@@ -110,6 +121,57 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
       return context.body.originalDetectIntentRequest.payload.inputs[0].rawInputs![0].query!;
     }
     return super.getSpokenText(context);
+  }
+
+  /**
+   * Get Google specific intents which can not be extracted by dialogflow
+   * @param context
+   */
+  protected getIntent(context: GoogleRequestContext): Intent {
+    const intent = super.getIntent(context);
+
+    // All intent unequel to Unhandled can be passed through
+    if (intent !== GenericIntent.Unhandled) {
+      return intent;
+    }
+
+    // Extract SelectedElementIntent when Google sends unhandledIntent
+    if (
+      context.body.originalDetectIntentRequest.payload &&
+      context.body.originalDetectIntentRequest.payload!.inputs &&
+      context.body.originalDetectIntentRequest.payload!.inputs!.length > 0 &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0] &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].intent === "actions.intent.OPTION"
+    ) {
+      return GenericIntent.SelectedElement;
+    }
+
+    // return unhandled intent from apiai
+    return intent;
+  }
+
+  protected getEntities(context: GoogleRequestContext);
+  protected getEntities(context: GoogleRequestContext) {
+    const intent = super.getIntent(context);
+    const entities: CommonRequestExtraction["entities"] = super.getEntities(context);
+
+    // extract selectedElement
+    if (
+      intent === GenericIntent.SelectedElement &&
+      context.body.originalDetectIntentRequest.payload &&
+      context.body.originalDetectIntentRequest.payload!.inputs &&
+      context.body.originalDetectIntentRequest.payload!.inputs!.length > 0 &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0] &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments!.length > 0 &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0] &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].textValue &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].name === "OPTION"
+    ) {
+      entities.selectedElement = context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].textValue!;
+    }
+
+    return entities;
   }
 
   /**
