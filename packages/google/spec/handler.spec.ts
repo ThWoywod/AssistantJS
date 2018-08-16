@@ -1,11 +1,12 @@
 import { DialogflowInterface } from "assistant-apiai";
 import { SpecHelper } from "assistant-source";
-import { GoogleInterface, GoogleSpecificHandable, GoogleSpecificTypes } from "../src/assistant-google";
+import { GoogleSpecificHandable, GoogleSpecificTypes } from "../src/assistant-google";
 import { DialogflowResponse } from "../src/components/google/conversation-interface/dialogflow-response";
 import { GoogleSpecHelper } from "../src/spec-helper";
 import { askForSignIn } from "./mocks/responses/ask-for-sign-in";
 import { endConversation } from "./mocks/responses/end-conversation";
 import { noInput } from "./mocks/responses/no-input";
+import { basicCard } from "./mocks/responses/rich-responses/basic-card";
 import { browseCarousel } from "./mocks/responses/rich-responses/browse-carousel";
 import { carouselResponse } from "./mocks/responses/rich-responses/carousel-response";
 import { listResponse } from "./mocks/responses/rich-responses/list-response";
@@ -116,6 +117,36 @@ describe("Handler", function() {
     });
   });
 
+  describe("with card", function() {
+    describe("with button", function() {
+      beforeEach(async function(this: CurrentThisContext) {
+        this.responseResults = {
+          voiceMessage: {
+            isSSML: false,
+            text: "This is a Basic Card",
+          },
+          card: {
+            title: "Card Title",
+            subTitle: "Card Subtitle",
+            description: "Card description",
+            cardImage: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+            cardAccessibilityText: "Google Logo",
+            button: {
+              title: "Button Title",
+              link: "https://www.google.com",
+            },
+          },
+        };
+
+        this.actualResponse = (this.handler as any).getBody(this.responseResults);
+      });
+
+      it("returns card", async function(this: CurrentThisContext) {
+        expect(this.actualResponse).toEqual(basicCard as DialogflowInterface.WebhookResponse<DialogflowResponse>);
+      });
+    });
+  });
+
   describe("with voiceMessage", function() {
     describe("with reprompts", function() {
       beforeEach(async function(this: CurrentThisContext) {
@@ -215,7 +246,7 @@ describe("Handler", function() {
 
         this.actualResponse = (this.handler as any).getBody(this.responseResults);
       });
-      
+
       it("returns only voiceMessage", async function(this: CurrentThisContext) {
         expect(this.actualResponse).toEqual(simpleResponse as DialogflowInterface.WebhookResponse<DialogflowResponse>);
       });
