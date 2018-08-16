@@ -31,12 +31,24 @@ export interface Extraction
  * Add custom types here
  */
 export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
-  card: {
-    title: string;
+  card: ApiAiSpecificTypes["card"] & {
+    /**
+     * Subtitle for Google Basic Card
+     */
     subTitle?: string;
-    description: string;
-    cardImage?: string;
+
+    /**
+     * accessibility text for image in Card
+     */
     cardAccessibilityText?: string;
+
+    /**
+     * Button to link to another webpage
+     */
+    button?: {
+      title: string;
+      link: string;
+    };
   };
 
   /**

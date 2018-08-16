@@ -157,6 +157,16 @@ export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes> extend
           image: results.card.cardImage
             ? { url: results.card.cardImage, accessibilityText: results.card.cardAccessibilityText || results.card.description }
             : undefined,
+          buttons: results.card.button
+            ? [
+                {
+                  title: results.card.button.title,
+                  openUrlAction: {
+                    url: results.card.button.link,
+                  },
+                },
+              ]
+            : undefined,
         },
       });
     }
