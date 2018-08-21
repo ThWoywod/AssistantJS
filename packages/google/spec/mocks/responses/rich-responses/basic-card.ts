@@ -1,4 +1,3 @@
-import { DialogflowInterface } from "assistant-apiai";
 /**
  * Source: https://github.com/dialogflow/fulfillment-webhook-json/tree/4c7fa3dce6bd2d3ae6ae98bc4c3f479ed4fb9f56
  */
@@ -10,12 +9,14 @@ export const basicCard = {
         items: [
           {
             simpleResponse: {
-              textToSpeech: "This is a Basic Card:",
+              textToSpeech: "This is a Basic Card",
             },
           },
           {
             basicCard: {
               title: "Card Title",
+              subtitle: "Card Subtitle",
+              formattedText: "Card description",
               image: {
                 url: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
                 accessibilityText: "Google Logo",
@@ -28,7 +29,6 @@ export const basicCard = {
                   },
                 },
               ],
-              imageDisplayOptions: "WHITE",
             },
           },
         ],

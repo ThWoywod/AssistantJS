@@ -31,12 +31,24 @@ export interface Extraction
  * Add custom types here
  */
 export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
-  card: {
-    title: string;
+  card: ApiAiSpecificTypes["card"] & {
+    /**
+     * Subtitle for Google Basic Card
+     */
     subTitle?: string;
-    description: string;
-    cardImage?: string;
+
+    /**
+     * accessibility text for image in Card
+     */
     cardAccessibilityText?: string;
+
+    /**
+     * Button to link to another webpage
+     */
+    button?: {
+      title: string;
+      link: string;
+    };
   };
 
   /**
@@ -75,6 +87,13 @@ export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes>
   setGoogleList(list: CustomTypes["googleList"] | Promise<CustomTypes["googleList"]>): this;
   setGoogleBrowsingCarousel(carousel: CustomTypes["googleBrowsingCarousel"] | Promise<CustomTypes["googleBrowsingCarousel"]>): this;
   setGoogleCarousel(carousel: CustomTypes["googleCarousel"] | Promise<CustomTypes["googleCarousel"]>): this;
+
+  /**
+   * Note: The table card feature is currently in developer preview.
+   * During the developer preview, you can test responses with table cards in the Action Console simulator,
+   * but users will not see the cards in the production version.
+   * @param table
+   */
   setGoogleTable(table: CustomTypes["googleTable"] | Promise<CustomTypes["googleTable"]>): this;
 }
 
