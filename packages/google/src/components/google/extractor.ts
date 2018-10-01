@@ -1,5 +1,6 @@
 import { Extractor as ApiAiExtractor } from "assistant-apiai";
 import {
+  AccountLinkingStatus,
   CommonRequestExtraction,
   ComponentSpecificLoggerFactory,
   GenericIntent,
@@ -54,15 +55,18 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     this.rootLogger.info({ requestId: context.id }, "Extracting request on google platform...");
     const apiAiExtraction = await super.extract(context);
 
+    const oAuthToken = this.getOAuthToken(context);
+
     return {
       ...apiAiExtraction,
+      oAuthToken,
       intent: this.getIntent(context),
       entities: this.getEntities(context),
       platform: this.googleComponent.name,
       sessionData: this.getSessionData(context),
-      oAuthToken: this.getOAuthToken(context),
       temporalAuthToken: this.getTemporalToken(context),
       device: this.getDevice(context),
+      accountLinkingStatus: this.getAccountLinkingStatus(context, oAuthToken),
     };
   }
 
@@ -103,6 +107,28 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     ) {
       return context.body.originalDetectIntentRequest.payload.user.userId;
     }
+    return null;
+  }
+
+  protected getAccountLinkingStatus(context: GoogleRequestContext, oAuthToken: string | null): AccountLinkingStatus | null {
+    if (
+      context.body.originalDetectIntentRequest.payload &&
+      context.body.originalDetectIntentRequest.payload!.inputs &&
+      context.body.originalDetectIntentRequest.payload!.inputs!.length > 0 &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0] &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].intent === "actions.intent.SIGN_IN" &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0] &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].extension &&
+      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].extension.status === "CANCELLED"
+    ) {
+      return AccountLinkingStatus.CANCELLED;
+    }
+
+    if (oAuthToken) {
+      return AccountLinkingStatus.OK;
+    }
+
     return null;
   }
 
