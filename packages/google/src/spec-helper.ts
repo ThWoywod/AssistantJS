@@ -1,4 +1,4 @@
-import { HandlerProxyFactory, injectionNames, intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
+import { AccountLinkingStatus, HandlerProxyFactory, injectionNames, intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
 import { GoogleHandler } from "./components/google/handler";
 import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
@@ -20,6 +20,7 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
       spokenText: "this is the spoken text",
       oAuthToken: "mock-google-oauth",
       temporalAuthToken: "mock-google-temporal-auth",
+      accountLinkingStatus: AccountLinkingStatus.OK,
       device: "phone",
       additionalParameters: {},
       ...additionalExtractions,

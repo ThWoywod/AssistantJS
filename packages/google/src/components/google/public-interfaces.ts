@@ -25,7 +25,8 @@ export interface Extraction
     OptionalExtractions.SessionData,
     OptionalExtractions.Device,
     OptionalExtractions.TemporalAuth,
-    OptionalExtractions.OAuth {}
+    OptionalExtractions.OAuth,
+    OptionalExtractions.AccountLinking {}
 
 /**
  * Add custom types here
