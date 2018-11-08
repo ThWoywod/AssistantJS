@@ -60,6 +60,7 @@ describe("RequestExtractor", function() {
 
       describe("with selection", function() {
         beforeEach(async function() {
+          this.context.body.queryResult.intent.isFallback = true;
           this.context.body.queryResult.intent.displayName = "__unhandled";
           this.context.body.originalDetectIntentRequest.payload!.inputs![0].intent = "actions.intent.OPTION";
           this.context.body.originalDetectIntentRequest.payload!.inputs![0].arguments = [

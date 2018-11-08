@@ -156,7 +156,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   protected getIntent(context: GoogleRequestContext): Intent {
     const intent = super.getIntent(context);
 
-    // All intent unequel to Unhandled can be passed through
+    // All intent unequal to Unhandled can be passed through
     if (intent !== GenericIntent.Unhandled) {
       return intent;
     }
