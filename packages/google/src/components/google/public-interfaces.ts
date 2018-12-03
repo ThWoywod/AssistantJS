@@ -24,7 +24,6 @@ export interface Extraction
   extends ApiAiExtraction,
     OptionalExtractions.SessionData,
     OptionalExtractions.Device,
-    OptionalExtractions.TemporalAuth,
     OptionalExtractions.OAuth,
     OptionalExtractions.AccountLinking {}
 

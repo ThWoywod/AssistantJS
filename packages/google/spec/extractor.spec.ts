@@ -20,7 +20,6 @@ describe("RequestExtractor", function() {
         platform: "google",
         oAuthToken: "my-access-token",
         accountLinkingStatus: AccountLinkingStatus.OK,
-        temporalAuthToken: "my-google-user-id",
         spokenText: "Talk to my test app",
         device: "phone",
         additionalParameters: jasmine.any(Object),

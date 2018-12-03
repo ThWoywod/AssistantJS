@@ -64,7 +64,6 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
       entities: this.getEntities(context),
       platform: this.googleComponent.name,
       sessionData: this.getSessionData(context),
-      temporalAuthToken: this.getTemporalToken(context),
       device: this.getDevice(context),
       accountLinkingStatus: this.getAccountLinkingStatus(context, oAuthToken),
     };
@@ -95,17 +94,6 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
       typeof context.body.originalDetectIntentRequest.payload.user.accessToken !== "undefined"
     ) {
       return context.body.originalDetectIntentRequest.payload.user.accessToken;
-    }
-    return null;
-  }
-
-  protected getTemporalToken(context: GoogleRequestContext): string | null {
-    if (
-      typeof context.body.originalDetectIntentRequest.payload !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.user !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.user.userId !== "undefined"
-    ) {
-      return context.body.originalDetectIntentRequest.payload.user.userId;
     }
     return null;
   }
