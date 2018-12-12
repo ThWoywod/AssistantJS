@@ -77,6 +77,11 @@ export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes> extend
     return this;
   }
 
+  public revokeGoogleAccountLinking(): this {
+    this.setHttpStatusCode(401);
+    return this;
+  }
+
   /**
    * creates the google-specific response for Dialogflow
    * @param results current results
