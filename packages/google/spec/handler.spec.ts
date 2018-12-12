@@ -21,7 +21,6 @@ interface CurrentThisContext {
   handler: GoogleSpecificHandable<GoogleSpecificTypes>;
   responseResults: Partial<GoogleSpecificTypes>;
   actualResponse: DialogflowInterface.WebhookResponse<DialogflowResponse>;
-  httpStatusCodeSpy: jasmine.Spy;
 }
 
 describe("Handler", function() {
