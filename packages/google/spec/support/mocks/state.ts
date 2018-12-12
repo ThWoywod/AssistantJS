@@ -13,4 +13,8 @@ export class MainState implements State.Required {
   public async unansweredGenericIntent() {
     await this.handler.send();
   }
+
+  public revokeTokenIntent() {
+    this.handler.revokeGoogleAccountLinking();
+  }
 }
