@@ -3,11 +3,10 @@ import { GoogleHandler } from "./components/google/handler";
 import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
 export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes, GoogleSpecificHandable<GoogleSpecificTypes>> {
-  constructor(public specSetup: SpecHelper) {}
+  constructor(public specHelper: SpecHelper) {}
 
   public async pretendIntentCalled(
     intent: Intent,
-    autoStart = true,
     additionalExtractions: Partial<Extraction> = {},
     additionalContext = {}
   ): Promise<GoogleSpecificHandable<GoogleSpecificTypes>> {
@@ -36,23 +35,18 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
       ...additionalContext,
     };
 
-    this.specSetup.createRequestScope(extraction, context);
+    this.specHelper.createRequestScope(extraction, context);
 
     // Bind handler as singleton
-    this.specSetup.setup.container.inversifyInstance.unbind("google:current-response-handler");
-    this.specSetup.setup.container.inversifyInstance
+    this.specHelper.assistantJs.container.inversifyInstance.unbind("google:current-response-handler");
+    this.specHelper.assistantJs.container.inversifyInstance
       .bind("google:current-response-handler")
       .to(GoogleHandler)
       .inSingletonScope();
 
-    // auto run machine if wanted
-    if (autoStart) {
-      await this.specSetup.runMachine();
-    }
+    const proxyFactory = this.specHelper.assistantJs.container.inversifyInstance.get<HandlerProxyFactory>(injectionNames.handlerProxyFactory);
 
-    const proxyFactory = this.specSetup.setup.container.inversifyInstance.get<HandlerProxyFactory>(injectionNames.handlerProxyFactory);
-
-    const currentHandler = this.specSetup.setup.container.inversifyInstance.get<GoogleSpecificHandable<GoogleSpecificTypes>>("google:current-response-handler");
+    const currentHandler = this.specHelper.assistantJs.container.inversifyInstance.get<GoogleSpecificHandable<GoogleSpecificTypes>>("google:current-response-handler");
     const proxiedHandler = proxyFactory.createHandlerProxy(currentHandler);
 
     return proxiedHandler;
