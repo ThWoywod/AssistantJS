@@ -30,8 +30,8 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.48",
-    "assistant-source": "internal",
     "assistant-apiai": "internal",
+    "assistant-source": "internal",
     "express": "^4.16.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",

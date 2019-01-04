@@ -5,15 +5,16 @@ const apiAiDescriptor = require("assistant-apiai").descriptor;
 let mainState = require("../support/mocks/state").MainState;
 
 beforeEach(function() {
-  this.specHelper = new assistantJsCore.SpecHelper();
+  this.assistantJs = new assistantJsCore.AssistantJSSetup();
+  this.specHelper = new assistantJsCore.SpecHelper(this.assistantJs);
 
   // Bind and configure google and apiai extension
-  this.specHelper.setup.registerComponent(ownDescriptor);
-  this.specHelper.setup.registerComponent(apiAiDescriptor);
+  this.specHelper.assistantJs.registerComponent(ownDescriptor);
+  this.specHelper.assistantJs.registerComponent(apiAiDescriptor);
 
   // Prepare all other steps
   this.specHelper.prepare([mainState]);
 
-  this.assistantJs = this.specHelper.setup;
+  this.assistantJs = this.specHelper.assistantJs;
   this.container = this.assistantJs.container;
 });
