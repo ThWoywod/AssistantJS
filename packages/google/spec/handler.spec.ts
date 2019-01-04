@@ -1,5 +1,4 @@
 import { DialogflowInterface } from "assistant-apiai";
-import { SpecHelper } from "assistant-source";
 import { GoogleSpecificHandable, GoogleSpecificTypes } from "../src/assistant-google";
 import { DialogflowResponse } from "../src/components/google/conversation-interface/dialogflow-response";
 import { GoogleSpecHelper } from "../src/spec-helper";
@@ -14,9 +13,9 @@ import { simpleResponse } from "./mocks/responses/rich-responses/simple-response
 import { simpleResponseMultipleChatBubbles } from "./mocks/responses/rich-responses/simple-response-multiple-chat-bubbles";
 import { simpleResponseTts } from "./mocks/responses/rich-responses/simple-response-tts";
 import { tableCard } from "./mocks/responses/rich-responses/table-card";
+import { ThisContext } from "./support/this-context";
 
-interface CurrentThisContext {
-  specHelper: SpecHelper;
+interface CurrentThisContext extends ThisContext {
   googleSpecHelper: GoogleSpecHelper;
   handler: GoogleSpecificHandable<GoogleSpecificTypes>;
   responseResults: Partial<GoogleSpecificTypes>;
@@ -28,6 +27,7 @@ describe("Handler", function() {
     beforeEach(async function(this: CurrentThisContext) {
       this.googleSpecHelper = new GoogleSpecHelper(this.specHelper);
       this.handler = await this.googleSpecHelper.pretendIntentCalled("test");
+      await this.specHelper.runMachine("MainState");
       this.responseResults = this.specHelper.getResponseResults();
     });
 
@@ -413,6 +413,7 @@ describe("Handler", function() {
       beforeEach(async function(this: CurrentThisContext) {
         this.googleSpecHelper = new GoogleSpecHelper(this.specHelper);
         this.handler = await this.googleSpecHelper.pretendIntentCalled("revokeToken");
+        await this.specHelper.runMachine("MainState");
         this.responseResults = this.specHelper.getResponseResults();
       });
 
