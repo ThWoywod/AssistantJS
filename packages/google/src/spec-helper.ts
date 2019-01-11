@@ -1,6 +1,6 @@
 import { AccountLinkingStatus, HandlerProxyFactory, injectionNames, intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
 import { GoogleHandler } from "./components/google/handler";
-import { componentInjectionNames } from "./components/google/injection-names";
+import { googleInjectionNames } from "./components/google/injection-names";
 import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
 export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes, GoogleSpecificHandable<GoogleSpecificTypes>> {
@@ -39,16 +39,16 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
     this.specHelper.createRequestScope(extraction, context);
 
     // Bind handler as singleton
-    this.specHelper.assistantJs.container.inversifyInstance.unbind(componentInjectionNames.googleResponseHandler);
+    this.specHelper.assistantJs.container.inversifyInstance.unbind(googleInjectionNames.current.responseHandler);
     this.specHelper.assistantJs.container.inversifyInstance
-      .bind(componentInjectionNames.googleResponseHandler)
+      .bind(googleInjectionNames.current.responseHandler)
       .to(GoogleHandler)
       .inSingletonScope();
 
     const proxyFactory = this.specHelper.assistantJs.container.inversifyInstance.get<HandlerProxyFactory>(injectionNames.handlerProxyFactory);
 
     const currentHandler = this.specHelper.assistantJs.container.inversifyInstance.get<GoogleSpecificHandable<GoogleSpecificTypes>>(
-      componentInjectionNames.googleResponseHandler
+      googleInjectionNames.current.responseHandler
     );
     const proxiedHandler = proxyFactory.createHandlerProxy(currentHandler);
 

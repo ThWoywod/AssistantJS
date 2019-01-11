@@ -1,11 +1,16 @@
 /** Names of injectionable services, leads to fewer typing errors for most important injections */
-export const componentInjectionNames = {
+export const googleInjectionNames = {
   /**
    * Inject an instance of @type {Component<Configuration.Runtime>}
    */
-  googleComponent: "meta:component//google",
+  component: "meta:component//google",
   /**
-   * Inject an instance of @type {GoogleHandler}
+   * Namespace for services which are only available in the request scope.
    */
-  googleResponseHandler: "google:current-response-handler",
+  current: {
+    /**
+     * Inject an instance of @type {GoogleHandler}
+     */
+    responseHandler: "google:current-response-handler",
+  },
 };
