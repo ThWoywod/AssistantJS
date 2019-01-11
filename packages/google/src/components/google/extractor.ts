@@ -1,4 +1,4 @@
-import { Extractor as ApiAiExtractor } from "assistant-apiai";
+import { componentInjectionNames as apiaiComponentInjectionNames, Extractor as ApiAiExtractor } from "assistant-apiai";
 import {
   AccountLinkingStatus,
   CommonRequestExtraction,
@@ -14,6 +14,7 @@ import { inject, injectable, optional } from "inversify";
 import { Component } from "inversify-components";
 
 import { AppRequest, RawInput } from "./conversation-interface";
+import { componentInjectionNames } from "./injection-names";
 import { COMPONENT_NAME } from "./private-interfaces";
 import { Device, Extraction, GoogleRequestContext } from "./public-interfaces";
 
@@ -23,10 +24,10 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   private rootLogger: Logger;
 
   constructor(
-    @inject("meta:component//google") googleComponent: Component,
+    @inject(componentInjectionNames.googleComponent) googleComponent: Component,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory,
     @optional()
-    @inject("meta:component//apiai")
+    @inject(apiaiComponentInjectionNames.apiaiComponent)
     componentMeta?: Component<any>
   ) {
     if (typeof componentMeta === "undefined") {
