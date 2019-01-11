@@ -1,4 +1,4 @@
-import { apiaiInjectionNames, Extractor as ApiAiExtractor } from "assistant-apiai";
+import { Extractor as ApiAiExtractor } from "assistant-apiai";
 import {
   AccountLinkingStatus,
   CommonRequestExtraction,
@@ -27,7 +27,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     @inject(getMetaInjectionName(COMPONENT_NAME)) googleComponent: Component,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory,
     @optional()
-    @inject(apiaiInjectionNames.component)
+    @inject(getMetaInjectionName("apiai"))
     componentMeta?: Component<any>
   ) {
     if (typeof componentMeta === "undefined") {
