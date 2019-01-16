@@ -1,4 +1,13 @@
-import { AccountLinkingStatus, HandlerProxyFactory, injectionNames, intent as Intent, PlatformSpecHelper, RequestContext, SpecHelper } from "assistant-source";
+import {
+  AccountLinkingStatus,
+  HandlerProxyFactory,
+  injectionNames,
+  intent as Intent,
+  PlatformSpecHelper,
+  RequestContext,
+  SpecHelper,
+  UnsupportedFeatureSupportForHandables,
+} from "assistant-source";
 import { GoogleHandler } from "./components/google/handler";
 import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
@@ -46,7 +55,9 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
 
     const proxyFactory = this.specHelper.assistantJs.container.inversifyInstance.get<HandlerProxyFactory>(injectionNames.handlerProxyFactory);
 
-    const currentHandler = this.specHelper.assistantJs.container.inversifyInstance.get<GoogleSpecificHandable<GoogleSpecificTypes>>("google:current-response-handler");
+    const currentHandler = this.specHelper.assistantJs.container.inversifyInstance.get<
+      GoogleSpecificHandable<GoogleSpecificTypes> & UnsupportedFeatureSupportForHandables
+    >("google:current-response-handler");
     const proxiedHandler = proxyFactory.createHandlerProxy(currentHandler);
 
     return proxiedHandler;
