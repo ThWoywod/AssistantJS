@@ -9,6 +9,7 @@ import {
   UnsupportedFeatureSupportForHandables,
 } from "assistant-source";
 import { GoogleHandler } from "./components/google/handler";
+import { googleInjectionNames } from "./components/google/injection-names";
 import { Extraction, GoogleSpecificHandable, GoogleSpecificTypes } from "./components/google/public-interfaces";
 
 export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes, GoogleSpecificHandable<GoogleSpecificTypes>> {
@@ -47,9 +48,9 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
     this.specHelper.createRequestScope(extraction, context);
 
     // Bind handler as singleton
-    this.specHelper.assistantJs.container.inversifyInstance.unbind("google:current-response-handler");
+    this.specHelper.assistantJs.container.inversifyInstance.unbind(googleInjectionNames.current.responseHandler);
     this.specHelper.assistantJs.container.inversifyInstance
-      .bind("google:current-response-handler")
+      .bind(googleInjectionNames.current.responseHandler)
       .to(GoogleHandler)
       .inSingletonScope();
 
@@ -57,7 +58,8 @@ export class GoogleSpecHelper implements PlatformSpecHelper<GoogleSpecificTypes,
 
     const currentHandler = this.specHelper.assistantJs.container.inversifyInstance.get<
       GoogleSpecificHandable<GoogleSpecificTypes> & UnsupportedFeatureSupportForHandables
-    >("google:current-response-handler");
+    >(googleInjectionNames.current.responseHandler);
+
     const proxiedHandler = proxyFactory.createHandlerProxy(currentHandler);
 
     return proxiedHandler;

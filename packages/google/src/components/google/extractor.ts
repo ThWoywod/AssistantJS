@@ -11,9 +11,10 @@ import {
   RequestExtractor,
 } from "assistant-source";
 import { inject, injectable, optional } from "inversify";
-import { Component } from "inversify-components";
+import { Component, getMetaInjectionName } from "inversify-components";
 
 import { AppRequest, RawInput } from "./conversation-interface";
+import { googleInjectionNames } from "./injection-names";
 import { COMPONENT_NAME } from "./private-interfaces";
 import { Device, Extraction, GoogleRequestContext } from "./public-interfaces";
 
@@ -23,10 +24,10 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   private rootLogger: Logger;
 
   constructor(
-    @inject("meta:component//google") googleComponent: Component,
+    @inject(getMetaInjectionName(COMPONENT_NAME)) googleComponent: Component,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory,
     @optional()
-    @inject("meta:component//apiai")
+    @inject(getMetaInjectionName("apiai"))
     componentMeta?: Component<any>
   ) {
     if (typeof componentMeta === "undefined") {
