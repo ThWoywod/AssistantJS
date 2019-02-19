@@ -26,12 +26,12 @@
     "assistant-source": "^0.4.0",
     "assistant-apiai": "^0.4.0",
     "inversify": "4.1.1",
-    "inversify-components": "^0.4.0"
+    "inversify-components": "^0.4.4"
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.48",
-    "assistant-apiai": "internal",
-    "assistant-source": "internal",
+    "assistant-apiai": "^0.4.0",
+    "assistant-source": "^0.4.0",
     "express": "^4.16.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
@@ -41,14 +41,14 @@
     "gulp-typescript": "^4.0.1",
     "gulp-watch": "^5.0.0",
     "inversify": "4.1.1",
-    "inversify-components": "^0.4.0",
+    "inversify-components": "^0.4.4",
     "jasmine-ts": "^0.2.1",
     "nyc": "^11.9.0",
     "reflect-metadata": "^0.1.12",
     "tslint": "^5.4.0",
     "tslint-config-airbnb": "^5.9.2",
     "tslint-config-prettier": "^1.13.0",
-    "typescript": "~2.9.2"
+    "typescript": "^3.3.3"
   },
   "main": "./lib/assistant-google.js",
   "typings": "./dts/assistant-google.d.ts"
