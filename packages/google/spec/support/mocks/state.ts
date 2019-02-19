@@ -1,19 +1,20 @@
-import { ResponseFactory, State } from "assistant-source";
-import { injectable, inject } from "inversify";
+import { injectionNames, State } from "assistant-source";
+import { inject, injectable } from "inversify";
+import { GoogleSpecificHandable, GoogleSpecificTypes } from "../../../src/assistant-google";
 
 @injectable()
 export class MainState implements State.Required {
-  responseFactory: ResponseFactory;
+  constructor(@inject(injectionNames.current.responseHandler) private handler: GoogleSpecificHandable<GoogleSpecificTypes>) {}
 
-  constructor(@inject("core:unifier:current-response-factory") factory: ResponseFactory) {
-    this.responseFactory = factory;
+  public async unhandledGenericIntent() {
+    this.handler.endSessionWith("Hello from google!");
   }
 
-  unhandledGenericIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("Hello from google!");
+  public async unansweredGenericIntent() {
+    await this.handler.send();
   }
 
-  unansweredGenericIntent() {
-    this.responseFactory.createAndSendEmptyResponse();
+  public revokeTokenIntent() {
+    this.handler.revokeGoogleAccountLinking();
   }
 }
