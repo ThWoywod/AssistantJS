@@ -80,13 +80,11 @@ export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
   googleTable: GoogleInterface.TableCard;
 }
 
-/**
- * Add custom methods for here
+/*
+ * Typescript does not allow to extend two interfaces defining the same property in different ways (as
+ * `ApiAiSpecificHandable` and `Reprompts` do in this instance). On the other hand, intersection types
+ * are inherently suitable for mixin types (cmp. https://web.archive.org/web/20180712110334/https://www.typescriptlang.org/docs/handbook/advanced-types.html).
  */
-
-// Typescript does not allow to extend two interfaces defining the same property in different ways (as
-// `ApiAiSpecificHandable` and `Reprompts` do in this instance). On the other hand, intersection types
-// are inherently suitable for mixin types (cmp. https://web.archive.org/web/20180712110334/https://www.typescriptlang.org/docs/handbook/advanced-types.html).
 type MixinTypes<CustomTypes extends GoogleSpecificTypes> = ApiAiSpecificHandable<CustomTypes> &
   OptionalHandlerFeatures.Authentication &
   OptionalHandlerFeatures.Card<CustomTypes> &
@@ -95,6 +93,9 @@ type MixinTypes<CustomTypes extends GoogleSpecificTypes> = ApiAiSpecificHandable
   OptionalHandlerFeatures.SessionData<CustomTypes> &
   OptionalHandlerFeatures.SuggestionChips<CustomTypes>;
 
+/**
+ * Add custom methods for here
+ */
 export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends MixinTypes<CustomTypes> {
   setGoogleList(list: CustomTypes["googleList"] | Promise<CustomTypes["googleList"]>): this;
   setGoogleBrowsingCarousel(carousel: CustomTypes["googleBrowsingCarousel"] | Promise<CustomTypes["googleBrowsingCarousel"]>): this;
