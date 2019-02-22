@@ -5,7 +5,7 @@ import {
   DialogflowRequestContext,
   ExtractionInterface as ApiAiExtraction,
 } from "assistant-apiai";
-import { OptionalExtractions } from "assistant-source";
+import { OptionalExtractions, OptionalHandlerFeatures } from "assistant-source";
 import * as GoogleInterface from "./conversation-interface";
 import { Configuration } from "./private-interfaces";
 
@@ -83,7 +83,19 @@ export interface GoogleSpecificTypes extends ApiAiSpecificTypes {
 /**
  * Add custom methods for here
  */
-export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends ApiAiSpecificHandable<CustomTypes> {
+
+// Typescript does not allow to extend two interfaces defining the same property in different ways (as
+// `ApiAiSpecificHandable` and `Reprompts` do in this instance). On the other hand, intersection types
+// are inherently suitable for mixin types (cmp. https://web.archive.org/web/20180712110334/https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+type MixinTypes<CustomTypes extends GoogleSpecificTypes> = ApiAiSpecificHandable<CustomTypes> &
+  OptionalHandlerFeatures.Authentication &
+  OptionalHandlerFeatures.Card<CustomTypes> &
+  OptionalHandlerFeatures.ChatBubbles<CustomTypes> &
+  OptionalHandlerFeatures.Reprompts<CustomTypes> &
+  OptionalHandlerFeatures.SessionData<CustomTypes> &
+  OptionalHandlerFeatures.SuggestionChips<CustomTypes>;
+
+export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes> extends MixinTypes<CustomTypes> {
   setGoogleList(list: CustomTypes["googleList"] | Promise<CustomTypes["googleList"]>): this;
   setGoogleBrowsingCarousel(carousel: CustomTypes["googleBrowsingCarousel"] | Promise<CustomTypes["googleBrowsingCarousel"]>): this;
   setGoogleCarousel(carousel: CustomTypes["googleCarousel"] | Promise<CustomTypes["googleCarousel"]>): this;
@@ -97,7 +109,7 @@ export interface GoogleSpecificHandable<CustomTypes extends GoogleSpecificTypes>
   setGoogleTable(table: CustomTypes["googleTable"] | Promise<CustomTypes["googleTable"]>): this;
 
   /**
-   * Note: At the moment this will return a HTTP status code of 401. This will result in a error message, that your action is not responding at the moment.   
+   * Note: At the moment this will return a HTTP status code of 401. This will result in a error message, that your action is not responding at the moment.
    * At the moment it is not possible to set a custom message here.
    */
   revokeGoogleAccountLinking(): this;
