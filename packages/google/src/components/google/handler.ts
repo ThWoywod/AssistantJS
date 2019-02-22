@@ -6,7 +6,6 @@ import {
   ChatBubblesMixin,
   injectionNames,
   MinimalRequestExtraction,
-  OptionalHandlerFeatures,
   RepromptsMixin,
   RequestContext,
   ResponseHandlerExtensions,
