@@ -6,7 +6,6 @@ import {
   ChatBubblesMixin,
   injectionNames,
   MinimalRequestExtraction,
-  OptionalHandlerFeatures,
   RepromptsMixin,
   RequestContext,
   ResponseHandlerExtensions,
@@ -19,14 +18,7 @@ import { GoogleInterface, GoogleSpecificHandable, GoogleSpecificTypes } from "./
 
 @injectable()
 export class GoogleHandler<MergedAnswerTypes extends GoogleSpecificTypes> extends ApiAiHandler<MergedAnswerTypes>
-  implements
-    GoogleSpecificHandable<MergedAnswerTypes>,
-    OptionalHandlerFeatures.Authentication,
-    OptionalHandlerFeatures.Card<MergedAnswerTypes>,
-    OptionalHandlerFeatures.ChatBubbles<MergedAnswerTypes>,
-    OptionalHandlerFeatures.Reprompts<MergedAnswerTypes>,
-    OptionalHandlerFeatures.SessionData<MergedAnswerTypes>,
-    OptionalHandlerFeatures.SuggestionChips<MergedAnswerTypes> {
+  implements GoogleSpecificHandable<MergedAnswerTypes> {
   /**
    * define missing methods from Mixins here
    */
