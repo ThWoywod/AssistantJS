@@ -12,7 +12,8 @@
     "Was kann {dieser Skill|diese App|diese Anwendung}?",
     "wie bitte",
     "was war das",
-    "was hast du gesagt"
+    "was hast du gesagt",
+    "{verstehe|kapiere|raffe|checke|begreife} ich nicht"
   ],
   "yesGenericIntent": [
     "{ja|natürlich|selbstverständlich|klar|okay}",

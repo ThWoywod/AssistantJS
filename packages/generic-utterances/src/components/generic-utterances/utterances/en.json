@@ -8,7 +8,9 @@
     "How does that work?",
     "What is this for?",
     "What are you able to do?",
-    "What are your abilities?"
+    "What are your abilities?",
+    "I {don't|do not} understand {that|what to do|}",
+    "I {don't|do not} get it"
   ],
   "yesGenericIntent": [
     "{yes|yeah|of course|absolutely}",
