@@ -1,5 +1,5 @@
+import "reflect-metadata";
 import { ClearContextCallback, StayInContextCallback } from "../public-interfaces";
-
 export const stayInContextMetadataKey = Symbol("metadata-key: stayInContext");
 export const clearContextMetadataKey = Symbol("metadata-key: clearContext");
 
