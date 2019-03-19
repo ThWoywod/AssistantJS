@@ -1,0 +1,149 @@
+{
+  "mySpecificKeys": {
+    "keyOne": "keyOneResult"
+  },
+  "multiple": ["a", "b"],
+  "var": "a{{var}}",
+  "multipleVars": "a{{firstVar}}b{{secondVar}}c{{thirdVar}}",
+  "mainState": {
+    "testIntent": {
+      "embedded": {
+        "test": "very-specific-without-extractor",
+        "platformDependent": {
+          "ExtractorComponent": "platform-specific-sub-key"
+        }
+      }
+    },
+    "deviceDependentIntent": {
+      "embeddedKeyOuter": {
+        "embeddedKeyInner": {
+          "ExtractorComponent": {
+            "device1": "device-specific-sub-key"
+          }
+        }
+      }
+    },
+    "yesGenericIntent": "yes",
+    "platformDependent": {
+      "ExtractorComponent": "platform-specific-embedded-state-only"
+    },
+    "platformIndependent": "platform-independent-main-state",
+    "ExtractorComponent": "platform-specific-main-state-only",
+    "platformSpecificIntent": {
+      "ExtractorComponent": "platform-specific-intent"
+    }
+  },
+  "deviceDependentState": {
+    "ExtractorComponent": {
+      "device1": "state-platform-device-specific"
+    }
+  },
+  "root": {
+    "testIntent": {
+      "embedded": {
+        "platformDependent": {
+          "ExtractorComponent": "platform-specific-embedded"
+        },
+        "platformIndependent": "platform-independent-root-embedded"
+      },
+      "withoutExtractor": "root-without-extractor",
+      "deviceDependent": {
+        "ExtractorComponent": {
+          "device1": "root-intent-platform-device-specific"
+        }
+      }
+    },
+    "secondPlatformSpecificIntent": {
+      "ExtractorComponent": "root-platform-specific-intent"
+    },
+    "yesGenericIntent": "root-yes",
+    "rootKey": {
+      "ExtractorComponent": "platform-specific-root-only"
+    },
+    "ExtractorComponent": "root-only-platform-given"
+  },
+  "noIntentState": "stateOnly",
+  "templateSyntax": [
+    "{Can|May} I help you, {{var}}?",
+    "Would you like me to help you?"
+  ],
+  "templateSyntaxSmall": [
+    "{hello|hi} {{name}}",
+    "welcome {{name}}"
+  ],
+  "templateProbs": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5{ | | | }{ | | | }{ | | | }{ | | | }{ | | | }",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10"
+  ],
+  "filter": {
+    "stateA": {
+      "intentA": "FilterAState - filterTestAIntent",
+      "intentB": "FilterAState - filterTestBIntent",
+      "intentC": "FilterAState - filterTestCIntent",
+      "intentD": "FilterAState - filterTestDIntent",
+      "intentE": "FilterAState - filterTestEIntent"
+    },
+    "stateB": {
+      "intentA": "FilterBState - filterTestAIntent",
+      "intentB": "FilterBState - filterTestBIntent"
+    },
+    "stateC": {
+      "intentA": "FilterCState - filterTestAIntent",
+      "intentB": "FilterCState - filterTestBIntent"
+    }
+  },
+  "noInterpolation": "no interpolation",
+  "getAllAlternatives": {
+    "withOne": "no other alternatives",
+    "withArray": [
+      "alternative 1",
+      "alternative 2"
+    ],
+    "withTemplating": "{one|two}",
+    "withBoth": [
+      "alternative 1",
+      "alternative {2|3}"
+    ]
+  },
+  "getObjectState": {
+    "relativeIntent": {
+      "withSingleString": "only alternative",
+      "withPlaceholder": "alternative {{number}}",
+      "withTemplate": "alternative {1|2}",
+      "withArray": [
+        "alternative 1",
+        "alternative 2"
+      ],
+      "nestedWithArrays": {
+        "first": [
+          "alternative 1",
+          "alternative 2"
+        ],
+        "second": [
+          "alternative 3",
+          "alternative 4"
+        ]
+      },
+      "nestedWithTemplates": {
+        "a": {
+          "meta": {
+            "version": "{{version}}"
+          },
+          "oneAndTwo": "alternative {1|2}",
+          "threeAndFour": [
+            "alternative 3",
+            "alternative 4"
+          ]
+        }
+      }
+    }
+  }
+}

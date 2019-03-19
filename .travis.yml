@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "lts/*"
+install:
+  - npm install
+before_script:
+  - npm install -g gulp-cli lerna
+script: 
+  - gulp --version
+  - npm run gulp

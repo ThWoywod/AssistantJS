@@ -6,12 +6,13 @@ dts
 lib
 
 spec/build
+spec/builds
 
 *.tgz
 
 # Report
 .nyc_output
-coverage
 cc-test-reporter
+coverage
 
 .DS_store
