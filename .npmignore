@@ -1,0 +1,15 @@
+js
+node_modules
+src
+
+spec
+jasmine.json
+gulpfile.js
+tsconfig.json
+.gitignore
+
+.prettierrc.json
+*.tgz
+.vscode
+.nyc_output
+

@@ -1,0 +1,64 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "@root"
+    },
+    {
+      "path": "packages/core",
+      "name": "@assistant/core"
+    },
+    {
+      "path": "packages/alexa",
+      "name": "@assistant/alexa"
+    },
+    {
+      "path": "packages/apiai",
+      "name": "@assistant/apiai"
+    },
+    {
+      "path": "packages/validations",
+      "name": "@assistant/validations"
+    },
+    {
+      "path": "packages/authentication",
+      "name": "@assistant/authentication"
+    },
+    {
+      "path": "packages/google",
+      "name": "@assistant/google"
+    },
+    {
+      "path": "packages/generic-utterances",
+      "name": "@assistant/generic-utterances"
+    }
+  ],
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "eg2.tslint",
+      "MS-CEINTL.vscode-language-pack-de",
+      "eamodio.gitlens",
+      "eg2.vscode-npm-script",
+      "rebornix.project-snippets",
+      "baflo.JasmineSnippetsTS"
+    ]
+  },
+  "settings": {
+    "typescript.tsdk": "@root/node_modules/typescript/lib",
+    "editor.formatOnSave": true,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "tslint.autoFixOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "gitlens.currentLine.enabled": true,
+    "gitlens.codeLens.scopes": ["document"],
+    "tslint.alwaysShowRuleFailuresAsWarnings": true,
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/*/**": true
+    }
+  }
+}

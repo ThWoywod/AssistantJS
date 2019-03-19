@@ -1,0 +1,17 @@
+# Libs
+node_modules
+
+# Builds
+dts
+lib
+
+spec/build
+
+*.tgz
+
+# Report
+.nyc_output
+coverage
+cc-test-reporter
+
+.DS_store
