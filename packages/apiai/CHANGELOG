@@ -1,0 +1,36 @@
+0.4.2
+- removes applying of suggestion chips mixin to handler
+
+0.4.1
+- solved some todos regarding suggestion chips / payload tryouts
+
+0.4.0
+- aligns ApiAiSpecHelper with new spec helper interface from AssistantJS 0.4.0
+- add new ResponseHandler for compatibility with assistant-source 0.4.0
+- switches to dialogflow api v2
+- annotate utterances with entities
+
+0.3.0
+- makes assistant-apiai compatible with assistant-source 0.3.0
+- removes deprecated interface names (rootInterfaces, ...)
+- changes interface structure and configuration interface
+- uses bunyan for logging, adds component-specific logging outputs
+
+0.2.2
+- bugfix: since dialogflow always send header keys as lowercase strings, assistant-apiai now handles header keys as case-insensitive
+
+0.2.1
+- sets default display to undefined to use platform standard, which is voice
+
+0.2.0
+- adds authenticationHeaders support and configuration (now required!)
+- removes shouldEndSession from data hash going to api.ai
+- implements AssistantJS's chat messages
+- introduces defaultDisplayIsVoice, making the default display configurable
+- introduces README and CHANGELOG
+
+0.1.1
+- adds link to LICENSE file from package.json
+
+0.1.0
+- Initial public release
