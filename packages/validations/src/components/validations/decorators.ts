@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { DecoratorOptions } from "./public-interfaces";
 
 export const decoratorSymbols = {
