@@ -9,7 +9,8 @@
     "install": "lerna bootstrap",
     "postinstall": "lerna bootstrap",
     "specs-watcher": "lerna exec gulp specs-watcher",
-    "test": "lerna exec gulp test"
+    "test": "lerna exec gulp test",
+    "report": "lerna exec gulp build-local"
   },
   "devDependencies": {
     "lerna": "^3.10.6",
