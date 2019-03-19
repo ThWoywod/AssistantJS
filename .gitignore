@@ -4,9 +4,7 @@ node_modules
 # Builds
 dts
 lib
-
 spec/builds
-
 *.tgz
 
 # Report
