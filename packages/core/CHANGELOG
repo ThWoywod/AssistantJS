@@ -1,0 +1,123 @@
+version 0.4.1
+- fixes typing of StayInContextCallback and ClearContextCallback
+- fixes two scaffolding errors
+
+version 0.4.0
+- changes default behaviour of AssistantJSSetup's constructor to create a new container instead of using a global one. Removes global container.
+- changes get() and getRaw() methods of entity dictionary: Now casting returned numbers to strings, aligning both methods to the already specified return type (string|undefined). Previously, if entities in request/extraction have been numbers, dictionary did not return them as string, resulting in unexpected/untyped behaviour.
+- changes get() method of entity dictionary: If you are getting an assistantjs-configured custom entitiy and user passed a synonym of an entity value, get() automatically resolves to the entity value. Use getRaw() f you want to get the original passed value.
+- changes get() method of entity dictionary: If you are getting an assistantjs-configured custom entitiy, get() now always return the value with the nearest levenshtein distance instead of the original value. If you want the original value, use getRaw() instead. For non-custom-entities, get() returns the regular value.
+- adds listKeys and getSubset to session interface
+- introduces translateHelper's getAllAlternatives() method which returns all alternatives instead of a sample one. Useful for suggestion chips etc and as an alternative to getTranslationValuesFor.
+- changed the "assistant" binary to load the new application-initializer.js instead of index.js. To migrate, install the new assistant-source version globally.
+- the entry files for utterances/translations/entities now may be either .json, .js or .ts files
+- now supports generation of custom entities
+    - You are now able to define custom entities in a config/locales/en/entities.ts file (or .json, or .js). If you wonder how, just generate a new assistantjs application and have a look at the used interface in the generates entities.ts file.
+    - Remember that you need to set up a type mapping in your unifier configuration in config/components/unifier for your custom entities, too.
+    - You do not need to set up platform specific mappings (for dialogflow, alexa, ...) for your custom entities. 
+    - On the other hand, if you set up a platform specific mapping, our generators will use this platform specific mapping instead of your custom entity. This enables you to use custom entities as a fallback for missing platform specific types. For example, if you use the AMAZON.US_CITY slot type, but don't find a corresponding dialogflow entity for it, you are able to create a custom entity as a dialogflow fallback.
+- changed spec setup and made spec-helper more powerful. To make use of the improved spec setup in your 0.3.x project, create a new assistant js application and have a look at the generated spec setup.
+- renames "specSetup" to "specHelper" and removes autoStart option of pretendIntentCalled() in PlatformSpecHelper interface (unifierInterfaces)
+- removed index.ts and replaced it with application-initializer.ts to make the AssitantJS initialization process more adaptable. To migrate easily, create a new AssistantJS application, copy the created application-initializer.ts, paste it into your application and merge all locally made changes of your index.ts into your new application-initializer.ts
+- renamed SpecSetup to SpecHelper
+- new ResponsHandler: ResponseFactory and old Response-Types are obsolete now. A new ResponseHandler is introduced, which allows you the following:
+    - Method-Chaining `this.handler.prompt(...).setCard(...).setSuggestionChips(...)`
+    - dynamic types and methods based on the installed and used platforms `this.handler.addGoogleTable(...).addAlexaList(...)`. To Work you have to specif a intersection-type like `type MixedTypes = GoogleSpecificTypes & AlexaSpecificTypes; type MixedHandler = GoogleHandler<MixedTypes> & AlexaHandler<MixedTypes>;`
+    - every Method can be used either with plain objects or with promises
+    - for every common feature like SuggestionChips, Authentication or Cards there is a mixin which can be used and extended by specific ResponseHandler
+    - removed createAndSendEmptyResponse(), use endSessionWith("") instead.
+    - as of https://github.com/Microsoft/TypeScript/issues/17113 projects need to use `"skipLibCheck": true` in tsconfig.json
+    - add SelectedGenericIntent for selection of items, e.g. a list on a smart display
+- introduces @stayInContext and @clearContext decorators, which enables you to have multiple states active at the same time
+- adds specs to scaffolding process
+- adds status for accountlinking as optional extraction
+- substitutes alexa-utterance dependency with own implementation
+- allows integration of missing interpolation handlers to use fallback / default translations
+- makes translateHelper's t() method async
+- removes redis and fakeredis dependencies
+- introduces platform session, crypted platform session and redis based session storage
+- adds BeforeStateMachine and AfterStateMachine extension points
+- adds possibility to use platform sessions, for example session system of alexa or google assistant, and makes platform sessions the default session storage
+- introduces @filter decorator, which works like a beforeIntentHook, but is made specifically for state redirections (which should be the most common use case for hooks)
+- minor changes and improvements    
+
+version 0.3.2
+- fixes intent configuration in generator. Entities will be mapped with utterances only once. (@denselmann)
+
+version 0.3.1
+- fixes cli command "assistant server" with given port (@AndChr)
+- makes levenshtein comparison in entity dictionary case-insensitive
+
+version 0.3.0
+- promisifies hook api: Hooks aren't based on success() and failure() callbacks anymore, returning a Promise<boolean> instead
+- introduces beforeIntent_ and afterIntent_ methods: These methods may be implemented in states and are called before/after an intent. This may be a good alternative for state-dependent hooks.
+- fixes translateValuesFor/translateHelper call dependency bug
+- adds device recognition: Platforms are now able to emit a device name which can be used to implement device-specific behaviour
+- adds device-specific translation convention: If there is a device, AssistantJS will automatically look up keys structured like state.intent.{key}.platform.device
+- enhances BaseState: BaseState now supports abbrevations for ResponseFactory (this.prompt(), this.endSessionWith()), TranslateHelper (this.t()), platform/device recognition (getPlatform(), getDeviceOrPlatform()) and logging (this.logger)
+- groups state interfaces to a State namespace (State.Required, State.ErrorHandler, State.BeforeIntent, ...)
+- adds unique short requestId to RequestContext
+- switches to production-ready logging through bunyan: Removes dependency of "debug" module, adding bunyan instead.
+- makes bunyan instance configurable through "core:root"-configuration
+- makes logger instance injectable in all classes (as well in root as in request scope)
+- adds the current request's id, an unique session identifier (not the session id) and the current platform/device as default parameters to request-specific logger
+- makes logging opt-in-able in specs via environment variable SPEC_LOGS=true
+- enables component-specific logging (especially for external assistantjs components)
+- adds extension point enabling other components to add middlewares to request-specific logger
+- enables whitelisting of specific extraction elements with logger, uses reasonable secure default
+- changes featureChecker to use type guards
+- updates multiple dependencys (esp. typescript)
+- changes structure of configuration interfaces to improve type safety and user handling, now seperating between Configuration.Defaults and Configuration.Required and deriving Configuration.Runtime and user configuration
+- deprecates interface exports (rootInterfaces, servicesInterfaces, unifierInterfaces, ...), now exporting all interfaces directly
+- restructures internal interfaces, splits them up into public-interfaces (which are exported) and private-interfaces (which aren't)
+- moves all interfaces needed for platform generators into single PlatformGenerator namespace
+- updates scaffolding to generate new 0.3.0 structures in generated projects
+- adds interfaces for internal hooks, making them type-safe
+- adds cli command to list extension points and components
+
+version 0.2.7
+- removes local references from package-lock.json
+- adds default port to fakredis spec instance, bugfixing fast mode
+
+version 0.2.6
+- executes registerInternalComponents() only if not done already by developer, giving him/her more flexibility
+
+version 0.2.5
+- makes tests faster
+- updates inversify-components
+- uses fast-option for fakeredis in default configuration
+
+version 0.2.4
+- switches to fakeredis as default configuration, lowering the barriers to entry
+
+version 0.2.3
+- sample selection now prefers array syntax over template syntax:
+  When translateHelper draws a translation, it first looks out for the translation array and grabs a sample,
+  before evaluating the sample's template syntax. This changes the probabilities of translation entries.
+
+version 0.2.2
+- enhances platform-specific i18n translations
+- enables i18n data models
+- fixes bug causing filtering of all entities in logs
+
+version 0.2.1
+- fixes bug which changed values of entities named "password", "pin" or "secure"
+
+version 0.2.0
+- adds interfaces for chat text, reprompts and suggestion chips
+- introduces state transition history
+- adds interfaces for session factory and current session factory
+- response objects can now ignore unsupported platform features
+- adds code examples to readme
+
+version 0.1.2
+- bugfix: additional arguments of intent methods are now passed to hooks, too
+
+version 0.1.1
+- introduces changelog
+- adds redis configuration to scaffold
+- removes redis default configuration
+- removes redis dependency for assistant cli
+
+version 0.1.0
+- first initial public release

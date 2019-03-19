@@ -13,3 +13,5 @@ tsconfig.json
 .vscode
 .nyc_output
 
+coverage
+cli
