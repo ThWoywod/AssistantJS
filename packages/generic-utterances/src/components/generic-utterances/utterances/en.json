@@ -1,0 +1,34 @@
+{
+  "helpGenericIntent": [
+    "Help",
+    "Could you {please|} help{ me|}?",
+    "Help me{, please|}",
+    "What can I do?",
+    "What can I do with {you|this app|this skill}?",
+    "How does that work?",
+    "What is this for?",
+    "What are you able to do?",
+    "What are your abilities?",
+    "I {don't|do not} understand {that|what to do|}",
+    "I {don't|do not} get it"
+  ],
+  "yesGenericIntent": [
+    "{yes|yeah|of course|absolutely}",
+    "yes please"
+  ],
+  "noGenericIntent": [
+    "{no|nope}",
+    "not{| at all}",
+    "absolutely not",
+    "no thanks",
+    "no but thank you"
+  ],
+  "cancelGenericIntent": [
+    "{cancel|abort}"
+  ],
+  "stopGenericIntent": [
+    "{stop|exit|end}",
+    "{Leave|exit} {this app|this skill}",
+    "stop it"
+  ]
+}
