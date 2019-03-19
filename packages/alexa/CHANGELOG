@@ -1,0 +1,34 @@
+version 0.4.1
+- moves AlexaHandler's mixin interfaces to AlexaSpecificHandable
+
+version 0.4.0
+- aligns AlexaSpecHelper with new spec helper interface from AssistantJS 0.4.0
+- new ResponseHandler for compatibility with AssistantJS 0.4.0
+- add new ResponseTypes for Alexa. We use the official types from package ask-sdk-model (https://www.npmjs.com/package/ask-sdk-model)
+- Renamed "SpecHelper" to "AlexaSpecHelper"
+- add extraction of SelectedGenericIntent with selectedElement in Entity `selectedElement`
+- adds invocation name as new required configuration attribute
+- adds extraction of selected element for smart displays
+- considers custom entities in generator
+- implements setAlexaVideoItem to set videos for alexa
+
+version 0.3.1
+- updates build schema to latest version
+
+version 0.3.0
+- makes assistant-alexa compatible with assistant-source 0.3.0
+- removes deprecated interface names (rootInterfaces, ...)
+- changes configuration interfaces to new assistantjs 0.3.0 format
+- changes logger dependency to bunyan, adds component-specific logging
+- renames "parameters" to "entities" in configuration
+
+version 0.2.1
+- updates alexa generator to new format
+
+version 0.2.0
+- adds reprompts, applies changes of new assistantjs version
+- adds debugging of oauth requests via FORCED_ALEXA_OAUTH_TOKEN variable
+- removes logging output about resolved context
+
+version 0.1.0
+- initial public release
