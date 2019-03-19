@@ -1,0 +1,33 @@
+{
+  "name": "assistant-google",
+  "version": "0.4.1",
+  "description": "Enables integration of google actions into assistant.js (via dialogflow)",
+  "scripts": {
+    "test": "gulp test",
+    "coverage": "gulp test-coverage"
+  },
+  "keywords": [
+    "google",
+    "google actions",
+    "google home",
+    "api.ai",
+    "dialogflow",
+    "assistant.js"
+  ],
+  "homepage": "http://www.assistantjs.org",
+  "bugs": "https://github.com/webcomputing/assistant-google/issues",
+  "author": "Antonius Ostermann <ostermann.antonius@gmail.com> (http://www.antonius-ostermann.de)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webcomputing/assistant-google"
+  },
+  "license": "SEE LICENSE IN <LICENSE>",
+  "peerDependencies": {
+    "assistant-source": "^0.4.0",
+    "assistant-apiai": "^0.4.0",
+    "inversify": "4.1.1",
+    "inversify-components": "^0.4.4"
+  },
+  "main": "./lib/src/assistant-google.js",
+  "typings": "./dts/assistant-google.d.ts"
+}

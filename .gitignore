@@ -5,7 +5,6 @@ node_modules
 dts
 lib
 
-spec/build
 spec/builds
 
 *.tgz
