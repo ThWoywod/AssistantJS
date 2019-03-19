@@ -47,6 +47,8 @@
     "assistant-source": "^0.4.1",
     "assistant-google": "^0.4.0",
     "assistant-apiai": "^0.4.1",
+    "assistant-validations": "^0.4.0",
+    "assistant-alexa": "^0.4.1",
     "prettier": "1.10.2"
   },
   "workspaces": [

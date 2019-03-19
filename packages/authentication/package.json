@@ -1,0 +1,31 @@
+{
+	"name": "assistant-authentication",
+	"version": "0.4.0",
+	"description": "Supports authentication with strategys and @authenticate decorator",
+	"keywords": [
+		"authentication",
+		"oauth",
+		"pin",
+		"authorization",
+		"AssistantJS"
+	],
+	"homepage": "http://www.assistantjs.org",
+	"bugs": "https://github.com/webcomputing/assistant-authentication/issues",
+	"author": "Antonius Ostermann",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/webcomputing/assistant-authentication"
+	},
+	"license": "SEE LICENSE IN <LICENSE>",
+	"peerDependencies": {
+		"assistant-source": "^0.4.0",
+		"assistant-validations": "^0.4.0",
+		"inversify": "4.1.1",
+		"inversify-components": "^0.4.4"
+	},
+	"dependencies": {
+		"@types/reflect-metadata": "0.0.5"
+	},
+	"main": "./lib/src/assistant-authentication.js",
+	"typings": "./dts/assistant-authentication.d.ts"
+}
