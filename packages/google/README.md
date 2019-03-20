@@ -25,4 +25,4 @@ If you start your AssistantJS server with `FORCED_GOOGLE_OAUTH_TOKEN="mytoken"`,
 That way, you can test or demo your skill without having a full OAuth setup in place.
 
 [1]: http://assistantjs.org
-[2]: https://github.com/webcomputing/assistant-apiai
+[2]: ../apiai

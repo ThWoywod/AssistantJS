@@ -130,10 +130,10 @@ describe("MainState", function () {
 [12]: https://stackoverflow.com/
 [13]: https://github.com/webcomputing/AssistantJS/wiki/Getting-Started
 [14]: https://github.com/webcomputing/AssistantJS/blob/master/LICENSE
-[15]: https://github.com/webcomputing/assistant-alexa
-[16]: https://github.com/webcomputing/assistant-apiai
-[17]: https://github.com/webcomputing/assistant-google
-[18]: https://github.com/webcomputing/assistant-validations
-[19]: https://github.com/webcomputing/assistant-authentication
-[20]: https://github.com/webcomputing/assistant-generic-utterances
+[15]: ./packages/alexa
+[16]: ./packages/apiai
+[17]: ./packages/google
+[18]: ./packages/validations
+[19]: ./packages/authentication
+[20]: ./packages/generic-utterances
 [21]: https://gitter.im/AssistantJS/Lobby
