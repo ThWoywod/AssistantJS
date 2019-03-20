@@ -58,4 +58,4 @@ export type MergedSetupSet = State.SetupSet<MergedAnswerTypes, MergedHandler>
 
 [1]: https://dialogflow.com/
 [2]: http://assistantjs.org
-[3]: https://github.com/webcomputing/assistant-google
+[3]: ../google
