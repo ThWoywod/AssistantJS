@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { StrategyClass } from "./public-interfaces";
 export const authenticateMetadataKey = Symbol("metadata-key: authenticate");
 
