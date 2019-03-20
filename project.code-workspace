@@ -6,31 +6,31 @@
     },
     {
       "path": "packages/core",
-      "name": "@assistant/core"
+      "name": "@assistant|core"
     },
     {
       "path": "packages/alexa",
-      "name": "@assistant/alexa"
+      "name": "@assistant|alexa"
     },
     {
       "path": "packages/apiai",
-      "name": "@assistant/apiai"
+      "name": "@assistant|apiai"
     },
     {
       "path": "packages/validations",
-      "name": "@assistant/validations"
+      "name": "@assistant|validations"
     },
     {
       "path": "packages/authentication",
-      "name": "@assistant/authentication"
+      "name": "@assistant|authentication"
     },
     {
       "path": "packages/google",
-      "name": "@assistant/google"
+      "name": "@assistant|google"
     },
     {
       "path": "packages/generic-utterances",
-      "name": "@assistant/generic-utterances"
+      "name": "@assistant|generic-utterances"
     }
   ],
   "extensions": {
