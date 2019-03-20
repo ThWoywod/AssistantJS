@@ -13,9 +13,15 @@ import {
 import { inject, injectable, optional } from "inversify";
 import { Component, getMetaInjectionName } from "inversify-components";
 
-import { AppRequest, RawInput } from "./conversation-interface";
+import { AppRequest, Input, RawInput } from "./conversation-interface";
 import { googleInjectionNames } from "./injection-names";
-import { COMPONENT_NAME } from "./private-interfaces";
+import {
+  COMPONENT_NAME,
+  GoogleRequestContextWithCapabilites,
+  GoogleRequestContextWithInputArguments,
+  GoogleRequestContextWithInputs,
+  GoogleRequestContextWithUser,
+} from "./private-interfaces";
 import { Device, Extraction, GoogleRequestContext } from "./public-interfaces";
 
 @injectable()
@@ -45,11 +51,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
     this.rootLogger.debug({ requestId: context.id }, "Requests fits for dialogflow, now checking if all needed google data is contained.");
 
-    return (
-      typeof context.body.originalDetectIntentRequest.payload !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.surface !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.surface.capabilities !== "undefined"
-    );
+    return this.surfaceCapabilitesAreDefined(context);
   }
 
   public async extract(context: GoogleRequestContext): Promise<Extraction> {
@@ -71,11 +73,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
   }
 
   protected getDevice(context: GoogleRequestContext) {
-    if (
-      typeof context.body.originalDetectIntentRequest.payload !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.surface !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.surface.capabilities !== "undefined"
-    ) {
+    if (this.surfaceCapabilitesAreDefined(context)) {
       const capabilities = context.body.originalDetectIntentRequest.payload.surface.capabilities;
       return capabilities.map(c => c.name).indexOf("actions.capability.SCREEN_OUTPUT") === -1 ? "speaker" : "phone";
     }
@@ -89,11 +87,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
       this.rootLogger.warn({ requestId: context.id }, "Using preconfigured mock oauth tocken..");
       return oAuthMock;
     }
-    if (
-      typeof context.body.originalDetectIntentRequest.payload !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.user !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.user.accessToken !== "undefined"
-    ) {
+    if (this.userIsDefined(context) && typeof context.body.originalDetectIntentRequest.payload.user.accessToken !== "undefined") {
       return context.body.originalDetectIntentRequest.payload.user.accessToken;
     }
     return null;
@@ -101,15 +95,12 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
 
   protected getAccountLinkingStatus(context: GoogleRequestContext, oAuthToken: string | null): AccountLinkingStatus | null {
     if (
-      context.body.originalDetectIntentRequest.payload &&
-      context.body.originalDetectIntentRequest.payload!.inputs &&
-      context.body.originalDetectIntentRequest.payload!.inputs!.length > 0 &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0] &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].intent === "actions.intent.SIGN_IN" &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0] &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].extension &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].extension.status === "CANCELLED"
+      this.hasArgumentsInFirstInput(context) &&
+      this.equalsIntent(context, "actions.intent.SIGN_IN") &&
+      context.body.originalDetectIntentRequest.payload.inputs[0].arguments &&
+      context.body.originalDetectIntentRequest.payload.inputs[0].arguments[0] &&
+      context.body.originalDetectIntentRequest.payload.inputs[0].arguments[0].extension &&
+      context.body.originalDetectIntentRequest.payload.inputs[0].arguments[0].extension.status === "CANCELLED"
     ) {
       return AccountLinkingStatus.CANCELLED;
     }
@@ -126,14 +117,8 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
    * @param context
    */
   protected getSpokenText(context: GoogleRequestContext): string {
-    if (
-      context.body.originalDetectIntentRequest &&
-      context.body.originalDetectIntentRequest.payload &&
-      context.body.originalDetectIntentRequest.payload.inputs &&
-      context.body.originalDetectIntentRequest.payload.inputs[0] &&
-      context.body.originalDetectIntentRequest.payload.inputs[0].rawInputs
-    ) {
-      return context.body.originalDetectIntentRequest.payload.inputs[0].rawInputs![0].query!;
+    if (this.hasPayloadWithInputs(context) && context.body.originalDetectIntentRequest.payload.inputs[0].rawInputs) {
+      return context.body.originalDetectIntentRequest.payload.inputs[0].rawInputs[0].query!;
     }
     return super.getSpokenText(context);
   }
@@ -151,13 +136,7 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     }
 
     // Extract SelectedElementIntent when Google sends unhandledIntent
-    if (
-      context.body.originalDetectIntentRequest.payload &&
-      context.body.originalDetectIntentRequest.payload!.inputs &&
-      context.body.originalDetectIntentRequest.payload!.inputs!.length > 0 &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0] &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].intent === "actions.intent.OPTION"
-    ) {
+    if (this.equalsIntent(context, "actions.intent.OPTION")) {
       return GenericIntent.Selected;
     }
 
@@ -172,17 +151,12 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
     // extract selectedElement
     if (
       intent === GenericIntent.Selected &&
-      context.body.originalDetectIntentRequest.payload &&
-      context.body.originalDetectIntentRequest.payload!.inputs &&
-      context.body.originalDetectIntentRequest.payload!.inputs!.length > 0 &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0] &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments!.length > 0 &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0] &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].textValue &&
-      context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].name === "OPTION"
+      this.hasPayloadWithInputs(context) &&
+      this.hasArgumentsInFirstInput(context) &&
+      context.body.originalDetectIntentRequest.payload.inputs[0].arguments[0].textValue &&
+      context.body.originalDetectIntentRequest.payload.inputs[0].arguments[0].name === "OPTION"
     ) {
-      entities.selectedElement = context.body.originalDetectIntentRequest.payload!.inputs![0].arguments![0].textValue!;
+      entities.selectedElement = context.body.originalDetectIntentRequest.payload.inputs[0].arguments[0].textValue;
     }
 
     return entities;
@@ -192,14 +166,51 @@ export class Extractor extends ApiAiExtractor implements RequestExtractor {
    * Get session data from userStorage
    * @param context
    */
-  private getSessionData(context: GoogleRequestContext): string | null {
-    if (
-      typeof context.body.originalDetectIntentRequest.payload !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.user !== "undefined" &&
-      typeof context.body.originalDetectIntentRequest.payload.user.userStorage !== "undefined"
-    ) {
+  protected getSessionData(context: GoogleRequestContext): string | null {
+    if (this.userIsDefined(context) && typeof context.body.originalDetectIntentRequest.payload.user.userStorage !== "undefined") {
       return context.body.originalDetectIntentRequest.payload.user.userStorage;
     }
     return null;
+  }
+
+  /** Checks if payload attribute exists and has inputs */
+  private hasPayloadWithInputs(context: GoogleRequestContext): context is GoogleRequestContextWithInputs {
+    return Boolean(
+      context.body.originalDetectIntentRequest.payload &&
+        context.body.originalDetectIntentRequest.payload.inputs &&
+        context.body.originalDetectIntentRequest.payload.inputs.length > 0 &&
+        context.body.originalDetectIntentRequest.payload.inputs[0]
+    );
+  }
+
+  /** Checks if we gt some additional arguments with the first input */
+  private hasArgumentsInFirstInput(context: GoogleRequestContext): context is GoogleRequestContextWithInputArguments {
+    return Boolean(
+      this.hasPayloadWithInputs(context) &&
+        context.body.originalDetectIntentRequest.payload.inputs[0].arguments &&
+        context.body.originalDetectIntentRequest.payload.inputs[0].arguments.length > 0 &&
+        context.body.originalDetectIntentRequest.payload.inputs[0].arguments[0]
+    );
+  }
+
+  /** Checks if given intent is in context */
+  private equalsIntent(context: GoogleRequestContext, intent: string) {
+    return this.hasPayloadWithInputs(context) && context.body.originalDetectIntentRequest.payload.inputs[0].intent === intent;
+  }
+
+  /** Checks if surface capabilites are defined */
+  private surfaceCapabilitesAreDefined(context: GoogleRequestContext): context is GoogleRequestContextWithCapabilites {
+    return (
+      typeof context.body.originalDetectIntentRequest.payload !== "undefined" &&
+      typeof context.body.originalDetectIntentRequest.payload.surface !== "undefined" &&
+      typeof context.body.originalDetectIntentRequest.payload.surface.capabilities !== "undefined"
+    );
+  }
+
+  /** Checks if user is defined in context */
+  private userIsDefined(context: GoogleRequestContext): context is GoogleRequestContextWithUser {
+    return (
+      typeof context.body.originalDetectIntentRequest.payload !== "undefined" && typeof context.body.originalDetectIntentRequest.payload.user !== "undefined"
+    );
   }
 }
