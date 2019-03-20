@@ -4,16 +4,13 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Specs",
-      "program": "${workspaceRoot}/node_modules/jasmine-ts/lib/index.js",
-      "args": [
-        "**/*.spec.ts"
-      ],
+      "name": "ALL - Specs",
+      "program": "${workspaceRoot}/node_modules/.bin/lerna",
+      "args": ["exec", "gulp" , "build-local"],
       "stopOnEntry": false,
       "cwd": "${workspaceRoot}",
       "protocol": "inspector",
-      "outputCapture":"std",
-      "preLaunchTask": "build-sources-and-maps"
+      "outputCapture":"std"
     }
   ]
 }
